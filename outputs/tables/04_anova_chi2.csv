@@ -1,0 +1,5 @@
+﻿Kiểm định,Biến phân tích,Thống kê,df,Giá trị tới hạn,P-value,Kết luận
+ANOVA 1 nhân tố,Calories_Burned ~ Workout_Type,F = 0.9490,"(3, 969)",F_crit = 2.6141,4.162395e-01,KHÔNG BÁC BỎ H₀
+Chi² phù hợp chuẩn,"Session_Duration ~ N(μ̂, σ̂²)",χ² = 97.5213,7,χ²_crit = 14.0671,0.000000e+00,BÁC BỎ H₀
+Chi² phù hợp chuẩn,"Calories_Burned ~ N(μ̂, σ̂²)",χ² = 17.1432,6,χ²_crit = 12.5916,8.770972e-03,BÁC BỎ H₀
+Chi² tính độc lập,Gender × Experience_Level,χ² = 0.0128,2,χ²_crit = 5.9915,9.936014e-01,KHÔNG BÁC BỎ H₀
