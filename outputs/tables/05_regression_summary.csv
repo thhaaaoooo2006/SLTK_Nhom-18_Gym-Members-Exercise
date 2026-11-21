@@ -1,0 +1,9 @@
+﻿Chỉ số,Giá trị,Ý nghĩa
+Cỡ mẫu (n),973,Số quan sát thành viên phòng gym
+Hệ số chặn (β̂₀),-1.4465,"se = 13.9074, KTC 95%: [-28.74, 25.85]"
+Hệ số góc (β̂₁),721.7860,"se = 10.6786, KTC 95%: [700.83, 742.74]"
+Hệ số xác định (R²),0.8247,82.47% biến thiên calo giải thích bởi thời lượng tập
+Hệ số tương quan (r),0.9081,Tương quan tuyến tính đồng biến rất mạnh
+Độ lệch chuẩn phần dư (s),114.2044,Độ biến thiên không được giải thích bởi mô hình
+Thống kê t (t₀),67.5920,"t_crit = 1.9624, P < 10⁻¹⁵ (Bác bỏ H₀)"
+Thống kê F (F₀),4568.6744,"F_crit = 3.8511, P < 10⁻¹⁵ (F₀ = t₀²)"
