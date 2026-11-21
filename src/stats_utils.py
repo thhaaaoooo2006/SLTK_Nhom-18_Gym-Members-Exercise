@@ -66,6 +66,61 @@ def sample_prop(indicator) -> float:
     return float(np.sum(a) / a.size)
 
 
+def sample_median(x) -> float:
+    """Trung vị mẫu."""
+    x = np.asarray(x, dtype=float)
+    return float(np.median(x))
+
+
+def sample_quantile(x, q: float) -> float:
+    """Phân vị mẫu bậc q (0 ≤ q ≤ 1)."""
+    x = np.asarray(x, dtype=float)
+    return float(np.percentile(x, q * 100))
+
+
+# ----------------------------------------------------------------------------
+# EDA – Phát hiện ngoại lai bằng IQR (dùng cho Chương 1)
+# ----------------------------------------------------------------------------
+def detect_outliers_iqr(x, k: float = 1.5) -> dict:
+    """Phát hiện ngoại lai theo quy tắc IQR.
+
+    Ngoại lai nếu xᵢ < Q₁ − k·IQR hoặc xᵢ > Q₃ + k·IQR (mặc định k = 1.5).
+    Trả về dict chứa Q1, Q3, IQR, cận dưới, cận trên, số lượng & chỉ số ngoại lai.
+    """
+    x = np.asarray(x, dtype=float)
+    q1 = float(np.percentile(x, 25))
+    q3 = float(np.percentile(x, 75))
+    iqr = q3 - q1
+    lower = q1 - k * iqr
+    upper = q3 + k * iqr
+    mask = (x < lower) | (x > upper)
+    return {
+        "Q1": q1, "Q3": q3, "IQR": iqr,
+        "lower_bound": lower, "upper_bound": upper,
+        "n_outliers": int(mask.sum()),
+        "outlier_indices": np.where(mask)[0],
+    }
+
+
+def describe_series(x) -> dict:
+    """Thống kê mô tả cho một chuỗi số (dùng toàn bộ hàm tự cài đặt).
+
+    Trả về dict gồm: n, x̄, S², S, min, Q1, median, Q3, max.
+    """
+    x = np.asarray(x, dtype=float)
+    return {
+        "n": x.size,
+        "x_bar": sample_mean(x),
+        "S2": sample_var(x, ddof=1),
+        "S": sample_std(x, ddof=1),
+        "min": float(np.min(x)),
+        "Q1": sample_quantile(x, 0.25),
+        "median": sample_median(x),
+        "Q3": sample_quantile(x, 0.75),
+        "max": float(np.max(x)),
+    }
+
+
 # ----------------------------------------------------------------------------
 # Hồi quy tuyến tính đơn (OLS) - dùng chung cho Chương 4
 # ----------------------------------------------------------------------------
