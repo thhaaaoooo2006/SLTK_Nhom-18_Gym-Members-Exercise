@@ -1,0 +1,23 @@
+﻿Chỉ tiêu,Tham số,Phương pháp,Loại KTC,Ước lượng điểm,Cận dưới,Cận trên,n,Điều kiện áp dụng
+Kỳ vọng Calories_Burned,μ,t-Student (σ chưa biết),Hai phía,905.4224049331963,888.2700094400477,922.5748004263448,973,Y xấp xỉ chuẩn hoặc n đủ lớn (n≥30)
+Kỳ vọng Calories_Burned,μ,t-Student (σ chưa biết),Một phía (cận dưới),905.4224049331963,891.0318699739365,inf,973,Y xấp xỉ chuẩn hoặc n đủ lớn (n≥30)
+Kỳ vọng Calories_Burned,μ,t-Student (σ chưa biết),Một phía (cận trên),905.4224049331963,-inf,919.812939892456,973,Y xấp xỉ chuẩn hoặc n đủ lớn (n≥30)
+Phương sai Session_Duration,σ²,Chi-bình phương,Hai phía,0.11767196866845149,0.10787296993827085,0.12887665203443505,973,X ~ chuẩn (nhạy với vi phạm giả thiết chuẩn)
+Phương sai Session_Duration,σ²,Chi-bình phương,Một phía (cận dưới),0.11767196866845149,0.10938461634715092,inf,973,X ~ chuẩn (nhạy với vi phạm giả thiết chuẩn)
+Phương sai Session_Duration,σ²,Chi-bình phương,Một phía (cận trên),0.11767196866845149,0.0,0.12699657975138556,973,X ~ chuẩn (nhạy với vi phạm giả thiết chuẩn)
+Độ lệch chuẩn Session_Duration,σ,Chi-bình phương (căn bậc hai),Hai phía,0.3430334803899635,0.32844020755423786,0.35899394428657855,973,Như trên
+Độ lệch chuẩn Session_Duration,σ,Chi-bình phương (căn bậc hai),Một phía (cận dưới),0.3430334803899635,0.33073345211386,inf,973,Như trên
+Độ lệch chuẩn Session_Duration,σ,Chi-bình phương (căn bậc hai),Một phía (cận trên),0.3430334803899635,0.0,0.35636579486727615,973,Như trên
+Tỷ lệ Gender = Male,p,Xấp xỉ chuẩn (Wald),Hai phía,0.5251798561151079,0.4938029391465555,0.5565567730836603,973,n·p̂≥5 và n(1−p̂)≥5: thỏa
+Tỷ lệ Gender = Male,p,Xấp xỉ chuẩn (Wald),Một phía (cận dưới),0.5251798561151079,0.4988475173143059,inf,973,n·p̂≥5 và n(1−p̂)≥5: thỏa
+Tỷ lệ Gender = Male,p,Xấp xỉ chuẩn (Wald),Một phía (cận trên),0.5251798561151079,-inf,0.5515121949159099,973,n·p̂≥5 và n(1−p̂)≥5: thỏa
+Tỷ số phương sai Calories (Male/Female),σ₁²/σ₂²,F-Fisher,Hai phía,1.3182081433443247,1.1024405568354902,1.5749239963697164,973,"2 mẫu độc lập, mỗi tổng thể ~ chuẩn"
+Tỷ số phương sai Calories (Male/Female),σ₁²/σ₂²,F-Fisher,Một phía (cận dưới),1.3182081433443247,1.134630747706803,inf,973,"2 mẫu độc lập, mỗi tổng thể ~ chuẩn"
+Tỷ số phương sai Calories (Male/Female),σ₁²/σ₂²,F-Fisher,Một phía (cận trên),1.3182081433443247,0.0,1.5304847153206784,973,"2 mẫu độc lập, mỗi tổng thể ~ chuẩn"
+Hiệu 2 kỳ vọng Calories (Male − Female),μ₁−μ₂,t Welch (σ₁²≠σ₂²),Hai phía,82.20705093992763,48.46736926335355,115.9467326165017,973,"Đã kiểm tra tỷ số phương sai bằng KTC F; n1, n2 lớn"
+Hiệu 2 kỳ vọng Calories (Male − Female),μ₁−μ₂,t Welch (σ₁²≠σ₂²),Một phía (cận dưới),82.20705093992763,53.90011697691105,inf,973,"Đã kiểm tra tỷ số phương sai bằng KTC F; n1, n2 lớn"
+Hiệu 2 kỳ vọng Calories (Male − Female),μ₁−μ₂,t Welch (σ₁²≠σ₂²),Một phía (cận trên),82.20705093992763,-inf,110.5139849029442,973,"Đã kiểm tra tỷ số phương sai bằng KTC F; n1, n2 lớn"
+Hiệu 2 kỳ vọng Calories (Male − Female),μ₁−μ₂,t gộp (đối chiếu),Hai phía,82.20705093992763,48.233146404347465,116.18095547550779,973,Chỉ để đối chiếu
+Hiệu 2 tỷ lệ buổi tập Calories ≥ 1000 (Male − Female),p₁−p₂,Xấp xỉ chuẩn (Wald),Hai phía,0.13236078989503647,0.07353147218124759,0.19119010760882535,973,n·p̂ và n(1−p̂) mỗi nhóm ≥5: thỏa
+Hiệu 2 tỷ lệ buổi tập Calories ≥ 1000 (Male − Female),p₁−p₂,Xấp xỉ chuẩn (Wald),Một phía (cận dưới),0.13236078989503647,0.08298967013167298,inf,973,n·p̂ và n(1−p̂) mỗi nhóm ≥5: thỏa
+Hiệu 2 tỷ lệ buổi tập Calories ≥ 1000 (Male − Female),p₁−p₂,Xấp xỉ chuẩn (Wald),Một phía (cận trên),0.13236078989503647,-inf,0.18173190965839997,973,n·p̂ và n(1−p̂) mỗi nhóm ≥5: thỏa
