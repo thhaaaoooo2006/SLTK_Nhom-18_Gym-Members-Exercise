@@ -4,3 +4,15 @@ __pycache__/
 venv/
 .DS_Store
 .vscode/
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+*.vrb
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+test_*
+

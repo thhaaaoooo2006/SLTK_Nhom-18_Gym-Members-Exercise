@@ -1,0 +1,328 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+
+\usepackage[margin=2.2cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=green!50!black,
+    urlcolor=teal
+}
+
+\linespread{1.25}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape Suy luận thống kê (MI3031) -- Nhóm 18}
+\fancyhead[R]{\small\itshape Báo cáo cuối kỳ}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+% ==================== TRANG BÌA ====================
+\begin{titlepage}
+\begin{center}
+    {\large\bfseries ĐẠI HỌC BÁCH KHOA HÀ NỘI}\\[5pt]
+    {\large\bfseries VIỆN TOÁN ỨNG DỤNG VÀ TIN HỌC (SAMI)}\\[3pt]
+    --------------------------------------------------\\[20pt]
+    \includegraphics[width=3.2cm]{../outputs/figures/05_regression_fit.png}\\[20pt] % Placeholder icon or fit plot
+    {\Large\bfseries BÁO CÁO BÀI TẬP LỚN}\\
+    {\Large\bfseries HỌC PHẦN: SUY LUẬN THỐNG KÊ (MI3031)}\\[25pt]
+
+    {\huge\bfseries NGHIÊN CỨU VÀ SUY DIỄN THỐNG KÊ TRÊN DỮ LIỆU TẬP LUYỆN GYM}\\[10pt]
+    {\LARGE\itshape (Gym Members Exercise Tracking Analysis)}\\[40pt]
+
+    \begin{minipage}{0.85\textwidth}
+        \begin{tabular}{ll}
+            \textbf{Nhóm thực hiện:} & \textbf{Nhóm 18} \\[6pt]
+            \textbf{Thành viên 1:} & \textbf{Nguyễn Thị Thảo} -- MSSV: \textbf{202419101} \\
+            \textbf{Thành viên 2:} & \textbf{Nguyễn Văn Nam Khánh} -- MSSV: \textbf{202419069} \\[6pt]
+            \textbf{Học kỳ:} & 2026.1 \\
+            \textbf{Ngành đào tạo:} & Khoa học Dữ liệu \& Toán Tin ứng dụng \\
+            \textbf{GitHub Repository:} & \url{https://github.com/thhaaaoooo2006/SLTK_Nhom-18_Gym-Members-Exercise}
+        \end{tabular}
+    \end{minipage}
+
+    \vfill
+    {\large Hà Nội, Tháng 11 Năm 2026}
+\end{center}
+\end{titlepage}
+
+% ==================== MỤC LỤC ====================
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+% ==================== LỜI MỞ ĐẦU ====================
+\chapter*{Lời mở đầu}
+\addcontentsline{toc}{chapter}{Lời mở đầu}
+Trong bối cảnh khoa học thể thao hiện đại, việc theo dõi định lượng các chỉ số sinh học và hiệu suất vận động đóng vai trò then chốt trong việc tối ưu hóa giáo án tập luyện, kiểm soát cân nặng và phòng tránh chấn thương. Học phần \textbf{Suy luận Thống kê (MI3031)} cung cấp nền tảng toán học chặt chẽ để từ một tập dữ liệu mẫu quan sát có thể suy diễn và khái quát hóa quy luật của toàn bộ tổng thể.
+
+Báo cáo này nghiên cứu bộ dữ liệu \textbf{Gym Members Exercise Tracking} gồm $n = 973$ thành viên phòng gym với 15 chỉ số thể chất và hành vi. Toàn bộ mã nguồn phân tích được xây dựng bằng ngôn ngữ Python từ các công thức toán học nguyên bản, chỉ sử dụng thư viện \texttt{scipy.stats} để tra cứu các phân vị lý thuyết ($t, F, \chi^2, z$), qua đó làm sáng tỏ các định lý toán học cốt lõi như Định lý Gauss-Markov (BLUE), tính tương đương giữa kiểm định $t$ và $F$ ($t_0^2 = f_0$), kiểm định Fisher $Z$, và nguyên lý ngoại suy trong hồi quy.
+
+% ==================== CHƯƠNG 1 ====================
+\chapter{Mẫu ngẫu nhiên và Thống kê mô tả}
+\section{Cơ sở lý thuyết mẫu ngẫu nhiên}
+\subsection{Định nghĩa Mẫu ngẫu nhiên \& Hàm thống kê}
+Cho $X$ là một đại lượng ngẫu nhiên đặc trưng cho tổng thể với hàm phân phối xác suất tích lũy $F(x)$ chưa biết.
+\begin{itemize}
+    \item \textbf{Mẫu ngẫu nhiên}: Bộ $n$ đại lượng ngẫu nhiên $(X_1, X_2, \dots, X_n)$ được gọi là mẫu ngẫu nhiên kích thước $n$ nếu chúng độc lập và có cùng phân phối xác suất với $X$ (iid -- independent and identically distributed):
+    \[ P(X_1 \le x_1, X_2 \le x_2, \dots, X_n \le x_n) = \prod_{i=1}^n F(x_i) \]
+    \item \textbf{Hàm thống kê}: Mọi hàm thực $T = g(X_1, \dots, X_n)$ hoàn toàn xác định từ các biến ngẫu nhiên mẫu và không chứa tham số tổng thể chưa biết được gọi là hàm thống kê.
+\end{itemize}
+
+\subsection{Các đặc trưng mẫu cơ bản}
+\begin{enumerate}
+    \item \textbf{Trung bình mẫu (Sample Mean)}:
+    \[ \bar{X} = \frac{1}{n}\sum_{i=1}^n X_i \]
+    Kỳ vọng $E(\bar{X}) = \mu$, phương sai $Var(\bar{X}) = \frac{\sigma^2}{n}$. $\bar{X}$ là ước lượng không chệch, vững và hiệu quả cho kỳ vọng $\mu$.
+    
+    \item \textbf{Phương sai mẫu hiệu chỉnh (Sample Variance)}:
+    \[ S^2 = \frac{1}{n-1}\sum_{i=1}^n (X_i - \bar{X})^2 \]
+    Việc chia cho bậc tự do $n - 1$ thay vì $n$ là điều kiện toán học bắt buộc để ước lượng không bị chệch: $E(S^2) = \sigma^2$. Nếu chia cho $n$, kỳ vọng chỉ đạt $\frac{n-1}{n}\sigma^2$.
+    
+    \item \textbf{Độ lệch chuẩn mẫu hiệu chỉnh}: $S = \sqrt{S^2}$.
+    
+    \item \textbf{Tần suất mẫu (Sample Proportion)}:
+    \[ \hat{p} = \frac{k}{n} = \frac{1}{n}\sum_{i=1}^n I_A(X_i) \]
+    với $k$ là số phần tử thỏa biến cố $A$, là ước lượng không chệch cho xác suất $p$ của tổng thể.
+\end{enumerate}
+
+\section{Bối cảnh dữ liệu và Tiền xử lý}
+Bộ dữ liệu gồm $973$ dòng quan sát và $15$ cột biến thuộc 3 nhóm:
+\begin{itemize}
+    \item \textbf{Định lượng liên tục}: Weight (kg), Height (m), Session\_Duration (giờ), Calories\_Burned (kcal), Fat\_Percentage (\%), Water\_Intake (lít), BMI.
+    \item \textbf{Định lượng rời rạc}: Age, Max\_BPM, Avg\_BPM, Resting\_BPM, Workout\_Frequency.
+    \item \textbf{Định tính / Phân loại}: Gender (Male: 511, Female: 462), Workout\_Type (Cardio, HIIT, Strength, Yoga), Experience\_Level (1, 2, 3).
+\end{itemize}
+
+\textbf{Chất lượng dữ liệu}: Kiểm tra toàn diện cho thấy $0$ giá trị khuyết thiếu (Missing = 0) và $0$ dòng dữ liệu trùng lặp (Duplicate = 0). Áp dụng phương pháp Tukey IQR Fences ($[Q_1 - 1.5 IQR, Q_3 + 1.5 IQR]$), các giá trị ngoại lai ghi nhận ở lượng calo hoặc BMI đều phản ánh vận động viên thể hình thực tế nên được giữ nguyên nhằm bảo đảm tính khách quan.
+
+\section{Bảng thống kê mô tả thực nghiệm}
+\begin{table}[htbp]
+\centering\small
+\caption{Thống kê mô tả các biến định lượng trọng tâm ($n = 973$)}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Biến} & \textbf{Trung bình ($\bar{x}$)} & \textbf{Phương sai ($S^2$)} & \textbf{Độ lệch chuẩn ($S$)} & \textbf{Trung vị} & \textbf{Min} & \textbf{Max} \\
+\midrule
+Calories\_Burned & 905.4224 & 74333.3965 & 272.6415 & 893.00 & 285.00 & 1650.00 \\
+Session\_Duration & 1.2564 & 0.1177 & 0.3430 & 1.25 & 0.50 & 2.00 \\
+Avg\_BPM & 143.4358 & 232.0624 & 15.2336 & 143.00 & 120.00 & 170.00 \\
+Weight (kg) & 73.0874 & 225.1051 & 15.0035 & 72.80 & 40.00 & 115.00 \\
+Fat\_Percentage & 24.9353 & 38.6475 & 6.2167 & 24.90 & 10.00 & 35.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ==================== CHƯƠNG 2 ====================
+\chapter{Ước lượng tham số}
+\section{Cơ sở lý thuyết ước lượng}
+\subsection{Ước lượng điểm: Phương pháp Mômen (MoM) \& Hợp lý cực đại (MLE)}
+\begin{itemize}
+    \item \textbf{Kỳ vọng $\mu$}: Cả MoM và MLE của $\mu$ đều dẫn đến trung bình mẫu $\hat{\mu} = \bar{X}$, là ước lượng không chệch và có phương sai nhỏ nhất trong lớp ước lượng tuyến tính (MVUE).
+    \item \textbf{Phương sai $\sigma^2$}: MLE cho phương sai là $\hat{\sigma}^2_{MLE} = \frac{1}{n}\sum (X_i - \bar{X})^2$, bị chệch dưới. Nhân với hệ số $\frac{n}{n-1}$ ta được ước lượng không chệch hiệu chỉnh $S^2$.
+    \item \textbf{Tỷ lệ $p$}: $\hat{p} = \frac{k}{n}$, đồng thời là ước lượng MoM và MLE của phân phối Bernoulli.
+\end{itemize}
+
+\subsection{Khoảng tin cậy 95\%}
+Khoảng tin cậy hai phía mức $(1-\alpha)$ cho tham số $\theta$ thỏa mãn $P(\theta_L \le \theta \le \theta_U) = 1 - \alpha$.
+\begin{itemize}
+    \item KTC cho $\mu$ khi $\sigma$ chưa biết: $\bar{X} \pm t_{\alpha/2, n-1} \frac{S}{\sqrt{n}}$.
+    \item KTC cho $\sigma^2$: $\left[\frac{(n-1)S^2}{\chi^2_{\alpha/2, n-1}}, \frac{(n-1)S^2}{\chi^2_{1-\alpha/2, n-1}}\right]$.
+    \item KTC cho $p$ (Wald): $\hat{p} \pm z_{\alpha/2} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$.
+    \item So sánh 2 tổng thể: Sử dụng kiểm định tỷ số phương sai $F = S_1^2 / S_2^2$ trước khi áp dụng công thức $t$-Welch (nếu phương sai khác nhau) hoặc $t$-gộp (nếu phương sai đồng nhất).
+\end{itemize}
+
+\section{Kết quả thực nghiệm trên dữ liệu Gym}
+\begin{table}[htbp]
+\centering\small
+\caption{Bảng khoảng tin cậy 95\% cho các tham số trọng tâm}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Tham số} & \textbf{Phương pháp} & \textbf{Ước lượng điểm} & \textbf{KTC 95\% (Hai phía)} \\
+\midrule
+$\mu$ (Calories\_Burned) & $t$-Student ($df=972$) & 905.4224 & [888.2700, 922.5748] \\
+$\sigma^2$ (Session\_Duration) & Chi-bình phương ($df=972$) & 0.1177 & [0.1079, 0.1289] \\
+$\sigma$ (Session\_Duration) & $\sqrt{\text{Chi-bình phương}}$ & 0.3430 & [0.3284, 0.3590] \\
+$p$ (Gender = Male) & Xấp xỉ chuẩn (Wald) & 0.5252 & [0.4938, 0.5566] \\
+$\sigma_1^2 / \sigma_2^2$ (Calories) & $F$-Fisher ($df=510, 461$) & 1.3182 & [1.1024, 1.5749] \\
+$\mu_1 - \mu_2$ (Male -- Female) & $t$-Welch ($df=969.67$) & 82.2071 & [48.4674, 115.9467] \\
+$p_1 - p_2$ (Tỷ lệ Calo $\ge 1000$) & Xấp xỉ chuẩn (Wald) & 0.1324 & [0.0735, 0.1912] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Diễn giải tần suất}: Mức tin cậy 95\% có ý nghĩa rằng nếu tiến hành lặp lại quy trình lấy mẫu ngẫu nhiên độc lập 973 thành viên một số lượng rất lớn lần, thì trung bình khoảng 95\% các khoảng tin cậy được tính toán sẽ bao bọc giá trị tham số thực của tổng thể.
+
+% ==================== CHƯƠNG 3 ====================
+\chapter{Kiểm định giả thuyết thống kê}
+\section{Quy trình kiểm định và Ba cách tiếp cận}
+Mọi bài toán kiểm định giả thuyết đều được tiến hành qua 5 bước nghiêm ngặt:
+(1) Thiết lập cặp giả thuyết $H_0$ và $H_1$; (2) Chọn mức ý nghĩa $\alpha = 0.05$; (3) Xây dựng thống kê kiểm định $T$ và xác định phân phối dưới $H_0$; (4) Tính giá trị thống kê $t_{obs}$ và $P$-value; (5) Kết luận bác bỏ hoặc không bác bỏ $H_0$.
+
+\textbf{Tính nhất quán của 3 cách tiếp cận}: Miền bác bỏ cổ điển ($t_{obs} \in W_\alpha$), $P$-value ($P \le \alpha$) và Đối chiếu KTC ($95\%$ KTC không chứa $\theta_0$) đều cho kết luận hoàn toàn tương đương trên mọi kiểm định thực nghiệm.
+
+\section{Kết quả kiểm định tham số 1 \& 2 tổng thể}
+\begin{table}[htbp]
+\centering\footnotesize
+\caption{Tổng hợp kết quả kiểm định tham số mức $\alpha = 0.05$}
+\begin{tabularx}{\textwidth}{lccccc}
+\toprule
+\textbf{Kiểm định} & \textbf{Giả thuyết $H_0$} & \textbf{Thống kê} & \textbf{$P$-value} & \textbf{Kết luận} & \textbf{Nhất quán} \\
+\midrule
+1. Kỳ vọng Calories & $\mu = 900$ & $T = 0.6204$ & 0.5352 & Không bác bỏ $H_0$ & Có \\
+2. Phương sai Thời lượng & $\sigma^2 = 0.10$ & $\chi^2 = 1143.77$ & 0.0002 & Bác bỏ $H_0$ & Có \\
+3. Tỷ lệ Nam giới & $p = 0.50$ & $Z = 1.5709$ & 0.1162 & Không bác bỏ $H_0$ & Có \\
+4. So sánh 2 phương sai & $\sigma_1^2 = \sigma_2^2$ & $F = 1.3182$ & 0.0025 & Bác bỏ $H_0$ ($\sigma_1^2 \ne \sigma_2^2$) & Có \\
+5. So sánh 2 kỳ vọng & $\mu_1 = \mu_2$ & $T_W = 4.7814$ & $2.01 \times 10^{-6}$ & Bác bỏ $H_0$ ($\mu_1 > \mu_2$) & Có \\
+6. So sánh 2 tỷ lệ Calo & $p_1 = p_2$ & $Z = 4.3455$ & $1.39 \times 10^{-5}$ & Bác bỏ $H_0$ ($p_1 > p_2$) & Có \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{ANOVA một nhân tố \& Kiểm định phi tham số}
+\subsection{Phân tích phương sai một nhân tố (One-way ANOVA)}
+Kiểm định giả thuyết về sự bằng nhau của kỳ vọng calo tiêu thụ giữa 4 loại hình bài tập: $H_0: \mu_{\text{Cardio}} = \mu_{\text{HIIT}} = \mu_{\text{Strength}} = \mu_{\text{Yoga}}$.
+\begin{table}[htbp]
+\centering\small
+\caption{Bảng ANOVA so sánh Calories\_Burned theo Workout\_Type}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Nguồn biến thiên} & \textbf{SS} & \textbf{df} & \textbf{MS} & \textbf{Thống kê $F$} & \textbf{$P$-value} \\
+\midrule
+Giữa các nhóm (SSF) & 1,481,280.95 & 3 & 493,760.32 & 6.7644 & $0.00016$ \\
+Nội bộ nhóm (SSE) & 70,770,775.14 & 969 & 73,034.86 & -- & -- \\
+Tổng cộng (SST) & 72,252,056.09 & 972 & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+Do $F = 6.7644 > F_{0.05, 3, 969} = 2.6141$ ($P = 0.00016 < 0.05$), ta \textbf{bác bỏ $H_0$}. Loại hình bài tập có tác động thực sự đến lượng calo tiêu hao (HIIT và Cardio đạt trung bình calo cao nhất).
+
+\subsection{Kiểm định phi tham số Chi-bình phương}
+\begin{enumerate}
+    \item \textbf{Kiểm định Chi-bình phương phù hợp phân phối chuẩn (Goodness-of-Fit)}:
+    Với $k = 10$ khoảng phân lớp ($df = k - 1 - 2 = 7$), Session\_Duration đạt $\chi^2 = 2.4578$ ($P = 0.9303 > 0.05$), không bác bỏ giả thuyết phân phối chuẩn. Calories\_Burned đạt $\chi^2 = 5.2140$ ($P = 0.6338 > 0.05$), hoàn toàn phù hợp với phân phối chuẩn.
+    \item \textbf{Kiểm định tính độc lập giữa Giới tính và Cấp độ kinh nghiệm}:
+    Bảng tiếp biến $2 \times 3$ ($df = (2-1)(3-1) = 2$) cho giá trị thống kê $\chi^2 = 0.0128$, giá trị tới hạn $\chi^2_{0.05, 2} = 5.9915$, $P = 0.9936$. Kết luận \textbf{không bác bỏ $H_0$}: Giới tính và Trình độ kinh nghiệm tập luyện hoàn toàn độc lập với nhau.
+\end{enumerate}
+
+% ==================== CHƯƠNG 4 ====================
+\chapter{Hồi quy tuyến tính và Tương quan}
+\section{Mô hình Hồi quy tuyến tính đơn OLS}
+Mô hình toán học: $Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i$, với $Y$: Calories\_Burned, $X$: Session\_Duration.
+Các giả thiết Gauss-Markov: $E(\varepsilon_i) = 0$, $Var(\varepsilon_i) = \sigma^2$, $Cov(\varepsilon_i, \varepsilon_j) = 0$ ($i \ne j$), $\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Hệ số hồi quy và kiểm định giả thuyết ($n = 973$)}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Hệ số} & \textbf{Ước lượng} & \textbf{Sai số chuẩn $SE$} & \textbf{Thống kê $t$} & \textbf{$P$-value} & \textbf{KTC 95\%} \\
+\midrule
+$\beta_0$ (Hệ số chặn) & $-1.4465$ & 13.9074 & $-0.104$ & 0.9172 & [$-28.7385$, 25.8455] \\
+$\beta_1$ (Thời lượng) & 721.7860 & 10.6786 & 67.592 & $< 10^{-15}$ & [700.8303, 742.7418] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Phương trình hồi quy thực nghiệm:
+\[ \hat{y} = -1.45 + 721.79 \cdot x \]
+Hệ số góc $\hat{\beta}_1 = 721.79$ có ý nghĩa: khi thời lượng tập tăng thêm 1 giờ, lượng calo đốt cháy trung bình tăng thêm xấp xỉ 721.8 kcal.
+
+\section{ANOVA Hồi quy \& Chứng minh tương đương $t_0^2 = f_0$}
+\begin{table}[htbp]
+\centering\small
+\caption{Bảng ANOVA mô hình hồi quy tuyến tính đơn}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Nguồn biến thiên} & \textbf{SS} & \textbf{df} & \textbf{MS} & \textbf{Thống kê $F$} & \textbf{$P$-value} \\
+\midrule
+Hồi quy (SSR) & 59,587,640.71 & 1 & 59,587,640.71 & 4568.6744 & $< 10^{-15}$ \\
+Sai số phần dư (SSE) & 12,664,415.38 & 971 & 13,042.65 & -- & -- \\
+Tổng cộng (SST) & 72,252,056.09 & 972 & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Chứng minh tính tương đương toán học $t_0^2 = f_0$}:
+Trong hồi quy đơn, thống kê kiểm định $t$ cho hệ số góc là $t_0 = \frac{\hat{\beta}_1}{s / \sqrt{S_{xx}}}$. Khi bình phương:
+\[ t_0^2 = \frac{\hat{\beta}_1^2 S_{xx}}{s^2} = \frac{SSR}{s^2} = \frac{MSR}{MSE} = f_0 \]
+Thực nghiệm số liệu: $t_0^2 = (67.591969)^2 = 4568.6744 = f_0$. Do đó kiểm định $t$ và kiểm định $F$ cho hệ số góc là hoàn toàn tương đương.
+Hệ số xác định $R^2 = \frac{SSR}{SST} = 0.8247$ ($82.47\%$ biến thiên lượng calo được giải thích tuyến tính bởi thời lượng tập).
+
+\section{Khoảng tin cậy cho kỳ vọng và Khoảng dự đoán cho cá thể}
+\begin{itemize}
+    \item KTC cho kỳ vọng phản hồi $E(Y|x_0)$: $\hat{y}_0 \pm t_{\alpha/2, n-2} \cdot s \sqrt{\frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}}$.
+    \item Khoảng dự đoán cho quan sát mới $Y_0$: $\hat{y}_0 \pm t_{\alpha/2, n-2} \cdot s \sqrt{1 + \frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}}$.
+\end{itemize}
+Khoảng dự đoán luôn rộng hơn KTC do có thêm số hạng ``$+1$'' biểu thị phương sai ngẫu nhiên của chính cá thể mới ($Var(y_0 - \hat{y}_0) = Var(\hat{y}_0) + \sigma^2$).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{../outputs/figures/05_slr_bands.png}
+\caption{Đồ thị hồi quy tuyến tính đơn với dải tin cậy 95\% và dải dự đoán 95\%}
+\end{figure}
+
+\section{Ý nghĩa thực tế của hệ số chặn $\hat{\beta}_0$}
+\begin{itemize}
+    \item \textbf{Về mặt thực tế}: Trong mẫu quan sát, thời lượng tập $x \in [0.5, 2.0]$ giờ. Không có ai tập 0 giờ. Việc diễn giải máy móc ``tập 0 giờ đốt $-1.45$ kcal'' là sai lầm ngoại suy (Extrapolation).
+    \item \textbf{Về mặt toán học}: $\hat{\beta}_0$ đóng vai trò \textbf{mỏ neo toán học} bắt buộc: (1) Đảm bảo tổng phần dư $\sum e_i = 0$; (2) Buộc đường hồi quy đi qua trọng tâm mẫu $(\bar{x}, \bar{y})$; (3) Đảm bảo phân rã $SST = SSR + SSE$ và $R^2 \in [0, 1]$.
+\end{itemize}
+
+\section{Phân tích phần dư \& Chẩn đoán mô hình}
+Đồ thị chẩn đoán 4 bảng được thể hiện trong Hình \ref{fig:res_diag}. Phần dư phân tán đều thành dải băng quanh 0 (Homoscedasticity), Q-Q plot bám sát đường 45° khẳng định giả thiết phân phối chuẩn không bị vi phạm.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{../outputs/figures/06_residual_diagnostics.png}
+\caption{Bộ 4 biểu đồ chẩn đoán phần dư và kiểm tra giả thiết Gauss-Markov}
+\label{fig:res_diag}
+\end{figure}
+
+\section{Hệ số tương quan Pearson \& Biến đổi Fisher Z}
+Hệ số tương quan mẫu $r = 0.9081$ (đồng biến rất mạnh).
+\begin{itemize}
+    \item Kiểm định $H_0: \rho = 0$: $t_0 = 67.592$, $P < 10^{-15}$ $\rightarrow$ Bác bỏ $H_0$.
+    \item Kiểm định $H_0: \rho = 0.85$ qua biến đổi Fisher $Z = \text{arctanh}(r) = 1.5167$: $Z_0 = 8.1633 > 1.96$ ($P < 10^{-15}$) $\rightarrow$ Bác bỏ $H_0$, $\rho$ thực tế cao hơn $0.85$.
+    \item KTC 95\% cho $\rho$: $[0.8965, 0.9185]$.
+\end{itemize}
+
+\textbf{Tương quan không đồng nghĩa với Nhân quả}: Mặc dù $r$ rất cao, thời lượng tập không phải nguyên nhân duy nhất quyết định lượng calo. Các biến can thiệp (Confounding variables) như nhịp tim trung bình (\texttt{Avg\_BPM}), khối lượng cơ thể (\texttt{Weight}) và loại bài tập (\texttt{Workout\_Type}) cùng đóng vai trò chi phối, đòi hỏi cần mở rộng sang mô hình Hồi quy bội.
+
+% ==================== CHƯƠNG 5 ====================
+\chapter{Kết luận và Hướng phát triển}
+\section{Kết luận}
+Báo cáo đã hoàn thành toàn diện các mục tiêu nghiên cứu của học phần Suy luận Thống kê:
+\begin{enumerate}
+    \item Khảo sát mẫu ngẫu nhiên $973$ thành viên phòng gym, kiểm tra tính toàn vẹn và lập bảng thống kê mô tả.
+    \item Ước lượng điểm và xây dựng khoảng tin cậy 95\% (1 phía, 2 phía) cho kỳ vọng, phương sai, tỷ lệ và so sánh 2 tổng thể.
+    \item Thực hiện quy trình kiểm định tham số và phi tham số bằng 3 cách tiếp cận nhất quán; chứng minh tác động của loại hình bài tập qua ANOVA ($P = 0.00016$).
+    \item Xây dựng mô hình hồi quy tuyến tính đơn giải thích $82.47\%$ biến thiên lượng calo; chứng minh chặt chẽ $t_0^2 = f_0$, phân tích phần dư chuẩn hóa và biến đổi Fisher $Z$.
+\end{enumerate}
+
+\section{Hướng phát triển: Hồi quy tuyến tính bội}
+Để kiểm soát đồng thời các biến giấu mặt, mô hình sẽ được mở rộng sang Hồi quy tuyến tính bội:
+\[ \text{Calories\_Burned} = \beta_0 + \beta_1 \cdot \text{Session\_Duration} + \beta_2 \cdot \text{Avg\_BPM} + \beta_3 \cdot \text{Weight} + \sum_{j} \gamma_j \cdot I_{\text{Workout\_Type}_j} + \varepsilon \]
+Mô hình mở rộng hứa hẹn nâng hệ số $R^2$ tiệm cận $95\%$ và cho phép phân tích độ co giãn calo theo nhịp tim và cân nặng.
+
+% ==================== TÀI LIỆU THAM KHẢO ====================
+\begin{thebibliography}{99}
+\bibitem{walpole} Walpole, R. E., Myers, R. H., Myers, S. L., \& Ye, K. (2012). \textit{Probability \& Statistics for Engineers \& Scientists} (9th ed.). Boston: Pearson.
+\bibitem{montgomery} Montgomery, D. C., \& Runger, G. C. (2018). \textit{Applied Statistics and Probability for Engineers} (7th ed.). Hoboken, NJ: John Wiley \& Sons.
+\bibitem{sami} Viện Toán ứng dụng và Tin học, Đại học Bách khoa Hà Nội. (2024). \textit{Bài giảng Suy luận Thống kê (MI3031)}.
+\bibitem{kaggle} Khorasani, V. (2024). \textit{Gym Members Exercise Dataset}. Kaggle Datasets.
+\end{thebibliography}
+
+\end{document}

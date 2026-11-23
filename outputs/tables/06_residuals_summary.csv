@@ -1,0 +1,9 @@
+﻿Chỉ số chẩn đoán,Giá trị,Ý nghĩa
+Trung bình phần dư (e_bar),3.9726130344655135e-15,Gần bằng 0 (Bảo toàn tổng e_i = 0)
+Độ lệch chuẩn phần dư (s),114.2044428921443,Ước lượng sai số chuẩn của mô hình
+Độ lệch (Skewness),0.21288983198555644,Gần 0: phân phối phần dư khá đối xứng
+Độ nhọn (Kurtosis dư),0.23758250111863788,Gần 0: hình chuông tương đồng chuẩn
+Thống kê Jarque-Bera,9.638123140738939,P-value = 8.0744e-03
+Thống kê Shapiro-Wilk,0.9952244934948183,P-value = 3.8416e-03
+Số quan sát |d_i| > 2,45.0,4.62% (kỳ vọng chuẩn ~ 5%)
+Số quan sát |d_i| > 3,3.0,0.31% (ngoại lai phần dư cực đoan)

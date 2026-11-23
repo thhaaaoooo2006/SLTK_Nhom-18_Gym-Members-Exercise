@@ -1,0 +1,323 @@
+\documentclass[aspectratio=169, 10pt]{beamer}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+
+\usetheme{Boadilla}
+\usecolortheme{whale}
+
+% Định nghĩa màu sắc
+\definecolor{HUSTRed}{RGB}{186, 12, 47}
+\definecolor{NavyBlue}{RGB}{20, 45, 85}
+\setbeamercolor{palette primary}{bg=NavyBlue,fg=white}
+\setbeamercolor{palette secondary}{bg=NavyBlue!80,fg=white}
+\setbeamercolor{palette tertiary}{bg=NavyBlue!60,fg=white}
+\setbeamercolor{structure}{fg=NavyBlue}
+\setbeamercolor{title}{fg=white,bg=NavyBlue}
+
+\title[Suy luận thống kê -- Nhóm 18]{\textbf{SUY DIỄN THỐNG KÊ TRÊN DỮ LIỆU TẬP LUYỆN GYM}}
+\subtitle{Học phần: Suy luận thống kê (MI3031) -- ĐHBK Hà Nội}
+\author[Thảo \& Khánh]{
+    \textbf{Nguyễn Thị Thảo} (MSSV: 202419101) \\
+    \textbf{Nguyễn Văn Nam Khánh} (MSSV: 202419069)
+}
+\institute[SAMI - HUST]{
+    Viện Toán ứng dụng và Tin học (SAMI) \\
+    Đại học Bách khoa Hà Nội
+}
+\date{Tháng 11 Năm 2026}
+
+\begin{document}
+
+% Slide 1: Bìa
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Slide 2: Mục tiêu nghiên cứu & Tổng quan dữ liệu (Thảo)
+\begin{frame}{1. Tổng quan Đề tài \& Bộ dữ liệu (Thảo)}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \textbf{Mục tiêu nghiên cứu}:
+            \begin{itemize}
+                \item Áp dụng lý thuyết \textbf{Suy luận Thống kê (MI3031)} để phân tích các yếu tố ảnh hưởng đến lượng calo tiêu thụ (\texttt{Calories\_Burned}).
+                \item Đánh giá tác động của thời lượng tập (\texttt{Session\_Duration}), loại bài tập (\texttt{Workout\_Type}) và giới tính (\texttt{Gender}).
+            \end{itemize}
+            \vspace{5pt}
+            \textbf{Bộ dữ liệu Gym Members Exercise}:
+            \begin{itemize}
+                \item Quy mô mẫu: $n = 973$ thành viên phòng gym.
+                \item Gồm 15 biến (12 định lượng, 3 định tính).
+                \item $100\%$ sạch: $0$ giá trị khuyết, $0$ bản ghi trùng.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{block}{Phân loại biến trọng tâm}
+                \begin{itemize}
+                    \item \textbf{Biến phản hồi ($Y$)}: \texttt{Calories\_Burned} (kcal).
+                    \item \textbf{Biến giải thích ($X$)}: \texttt{Session\_Duration} (giờ).
+                    \item \textbf{Biến phân loại}: \texttt{Gender}, \texttt{Workout\_Type}, \texttt{Experience\_Level}.
+                    \item \textbf{Biến sinh lý}: \texttt{Avg\_BPM}, \texttt{Max\_BPM}, \texttt{Weight}, \texttt{BMI}.
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 3: Chương 1 - Mẫu ngẫu nhiên & Thống kê mô tả (Thảo)
+\begin{frame}{2. Chương 1: Mẫu ngẫu nhiên \& Cơ sở Toán học (Thảo)}
+    \begin{block}{Nền tảng lý thuyết cốt lõi}
+        \begin{itemize}
+            \item \textbf{Mẫu ngẫu nhiên}: $(X_1, \dots, X_n)$ độc lập và có cùng phân phối ($iid$) với biến tổng thể $X$.
+            \item \textbf{Trung bình mẫu}: $\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i \longrightarrow E(\bar{X}) = \mu$, là ước lượng không chệch và vững.
+            \item \textbf{Phương sai mẫu hiệu chỉnh}:
+            \[ S^2 = \frac{1}{n - 1}\sum_{i=1}^n (X_i - \bar{X})^2 \longrightarrow E(S^2) = \sigma^2 \]
+            \textit{Chia cho $n - 1$ (bậc tự do) là điều kiện bắt buộc để loại bỏ độ chệch!}
+            \item \textbf{Tần suất mẫu}: $\hat{p} = k / n$, ước lượng không chệch cho xác suất $p$.
+        \end{itemize}
+    \end{block}
+    \vspace{3pt}
+    \textbf{Kiểm tra ngoại lai (Tukey IQR Fences)}: Khoảng hợp lệ $[Q_1 - 1.5 IQR, Q_3 + 1.5 IQR]$. Các điểm ngoại lai ở lượng calo hoặc BMI phản ánh thể lực thực tế của vận động viên $\rightarrow$ Giữ nguyên toàn bộ 973 mẫu.
+\end{frame}
+
+% Slide 4: Bảng mô tả thực nghiệm (Thảo)
+\begin{frame}{3. Bảng Thống kê Mô tả Thực nghiệm ($n = 973$) (Thảo)}
+    \begin{table}[H]
+    \centering\footnotesize
+    \begin{tabular}{lrrrrrr}
+    \toprule
+    \textbf{Biến số} & \textbf{Trung bình ($\bar{x}$)} & \textbf{Độ lệch chuẩn ($S$)} & \textbf{Trung vị} & \textbf{Min} & \textbf{Max} \\
+    \midrule
+    \texttt{Calories\_Burned} (kcal) & 905.42 & 272.64 & 893.00 & 285.00 & 1650.00 \\
+    \texttt{Session\_Duration} (giờ) & 1.256 & 0.343 & 1.25 & 0.50 & 2.00 \\
+    \texttt{Avg\_BPM} (nhịp/phút) & 143.44 & 15.23 & 143.00 & 120.00 & 170.00 \\
+    \texttt{Weight} (kg) & 73.09 & 15.00 & 72.80 & 40.00 & 115.00 \\
+    \midrule
+    \texttt{Gender = Male} & \multicolumn{5}{c}{$k = 511$, $\hat{p} = 52.52\%$} \\
+    \texttt{Workout\_Type: Cardio} & \multicolumn{5}{c}{$k = 251$, $\hat{p} = 25.80\%$} \\
+    \texttt{Workout\_Type: HIIT} & \multicolumn{5}{c}{$k = 247$, $\hat{p} = 25.39\%$} \\
+    \bottomrule
+    \end{tabular}
+    \end{table}
+    \textit{Toàn bộ các hàm thống kê được nhóm tự cài đặt trong mô-đun \texttt{src/stats\_utils.py}.}
+\end{frame}
+
+% Slide 5: Chương 2 - Ước lượng điểm & KTC 95% (Khánh)
+\begin{frame}{4. Chương 2: Ước lượng Điểm \& Khoảng tin cậy 95\% (Khánh)}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Phương pháp ước lượng điểm}:
+            \begin{itemize}
+                \item \textbf{MoM \& MLE} cho $\mu$: $\hat{\mu} = \bar{X} = 905.42$ kcal.
+                \item \textbf{MLE} cho $\sigma^2$: $\hat{\sigma}^2 = \frac{1}{n}\sum (X_i - \bar{X})^2$ (chệch dưới). Nhân $\frac{n}{n-1}$ thu được $S^2 = 0.1177$ (hiệu chỉnh không chệch).
+            \end{itemize}
+            \vspace{5pt}
+            \textbf{Diễn giải tần suất 95\%}:
+            \begin{quote}
+                \small ``Nếu lặp lại việc lấy mẫu độc lập 973 người vô hạn lần, thì 95\% các khoảng tin cậy tính được sẽ chứa đúng tham số thực của tổng thể.''
+            \end{quote}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Kết quả KTC 95\% Hai phía}
+                \footnotesize
+                \begin{itemize}
+                    \item $\mu_{\text{Calories}}$: $[888.27, 922.57]$ ($t$-Student, $df=972$).
+                    \item $\sigma^2_{\text{Duration}}$: $[0.1079, 0.1289]$ ($\chi^2$, $df=972$).
+                    \item $\sigma_{\text{Duration}}$: $[0.3284, 0.3590]$ ($\sqrt{\chi^2}$).
+                    \item $p_{\text{Male}}$: $[0.4938, 0.5566]$ (Wald z).
+                    \item $\mu_1 - \mu_2$ (Male -- Female): $[48.47, 115.95]$ ($t$-Welch, do $\sigma_1^2 \ne \sigma_2^2$).
+                    \item $p_1 - p_2$ (Calo $\ge 1000$): $[0.0735, 0.1912]$.
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 6: Chương 3 - Kiểm định tham số 1 & 2 tổng thể (Khánh)
+\begin{frame}{5. Chương 3: Kiểm định Tham số \& 3 Cách Tiếp cận (Khánh)}
+    \begin{block}{Quy trình 5 bước và Tính nhất quán của 3 cách tiếp cận}
+        (1) Giả thiết $H_0/H_1$ $\rightarrow$ (2) Chọn $\alpha = 0.05$ $\rightarrow$ (3) Thống kê kiểm định $T$ $\rightarrow$ (4) Tính $t_{\text{obs}}, P$-value $\rightarrow$ (5) Kết luận.
+        \begin{itemize}
+            \item \textbf{Cách 1 (Miền bác bỏ)}: $t_{\text{obs}} \in W_\alpha$.
+            \item \textbf{Cách 2 ($P$-value)}: $P \le \alpha = 0.05$.
+            \item \textbf{Cách 3 (Đối chiếu KTC)}: Giá trị $\theta_0$ không thuộc KTC 95\% tương ứng.
+        \end{itemize}
+    \end{block}
+
+    \begin{table}[H]
+    \centering\footnotesize
+    \begin{tabular}{lcccc}
+    \toprule
+    \textbf{Kiểm định} & \textbf{Giả thuyết $H_0$} & \textbf{Thống kê} & \textbf{$P$-value} & \textbf{Kết luận ($\alpha = 0.05$)} \\
+    \midrule
+    Kỳ vọng Calo & $\mu = 900$ & $T = 0.620$ & 0.5352 & Không bác bỏ $H_0$ \\
+    Phương sai Thời lượng & $\sigma^2 = 0.10$ & $\chi^2 = 1143.77$ & 0.0002 & \textbf{Bác bỏ $H_0$} \\
+    Tỷ lệ Nam giới & $p = 0.50$ & $Z = 1.571$ & 0.1162 & Không bác bỏ $H_0$ \\
+    So sánh 2 phương sai Calo & $\sigma_1^2 = \sigma_2^2$ & $F = 1.318$ & 0.0025 & \textbf{Bác bỏ $H_0$} ($\sigma_1^2 \ne \sigma_2^2$) \\
+    So sánh 2 kỳ vọng Calo & $\mu_1 = \mu_2$ & $T_W = 4.781$ & $2.01 \times 10^{-6}$ & \textbf{Bác bỏ $H_0$} (Nam đốt calo cao hơn) \\
+    \bottomrule
+    \end{tabular}
+    \end{table}
+\end{frame}
+
+% Slide 7: Chương 3 - ANOVA 1 nhân tố & Phi tham số (Thảo)
+\begin{frame}{6. Chương 3: ANOVA 1 Nhân tố \& Phi Tham số (Thảo)}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{ANOVA 1 nhân tố so sánh Calories theo Workout\_Type}:
+            \[ H_0: \mu_{\text{Cardio}} = \mu_{\text{HIIT}} = \mu_{\text{Strength}} = \mu_{\text{Yoga}} \]
+            \begin{table}[H]
+            \centering\scriptsize
+            \begin{tabular}{lrrrr}
+            \toprule
+            \textbf{Nguồn} & \textbf{SS} & \textbf{df} & \textbf{MS} & \textbf{Thống kê $F$} \\
+            \midrule
+            Giữa nhóm & $1.48 \times 10^6$ & 3 & 493,760 & \textbf{6.7644} \\
+            Nội bộ & $7.08 \times 10^7$ & 969 & 73,035 & -- \\
+            \bottomrule
+            \end{tabular}
+            \end{table}
+            $F = 6.7644 > F_{0.05, 3, 969} = 2.6141$ ($P = 0.00016$).
+            $\rightarrow$ \textbf{Bác bỏ $H_0$}: Loại bài tập có ảnh hưởng thực sự đến lượng calo đốt cháy.
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Kiểm định phi tham số Chi-bình phương}:
+            \begin{itemize}
+                \item \textbf{Phù hợp phân phối chuẩn (Goodness-of-Fit)}:
+                \begin{itemize}
+                    \item \texttt{Session\_Duration}: $\chi^2 = 2.4578, P = 0.9303 > 0.05$.
+                    \item \texttt{Calories\_Burned}: $\chi^2 = 5.2140, P = 0.6338 > 0.05$.
+                    \item $\rightarrow$ Phù hợp rất tốt với phân phối chuẩn!
+                \end{itemize}
+                \item \textbf{Kiểm định độc lập ($Gender \times Experience$)}:
+                \begin{itemize}
+                    \item Bảng tiếp biến $2 \times 3$, $df = 2$.
+                    \item $\chi^2 = 0.0128 < \chi^2_{0.05, 2} = 5.9915$ ($P = 0.9936$).
+                    \item $\rightarrow$ Không bác bỏ $H_0$: Giới tính và Cấp độ kinh nghiệm độc lập nhau!
+                \end{itemize}
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 8: Chương 4.1 - Hồi quy tuyến tính đơn (Thảo)
+\begin{frame}{7. Chương 4.1: Hồi quy Tuyến tính Đơn OLS (Thảo)}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \textbf{Mô hình OLS}: $Y = \beta_0 + \beta_1 X + \varepsilon$
+            \[ \hat{y} = -1.4465 + 721.7860 \cdot x \]
+            \begin{itemize}
+                \item $R^2 = 0.8247$: Thời lượng tập giải thích $82.47\%$ biến thiên lượng calo.
+                \item Hệ số góc $\hat{\beta}_1 = 721.79$: Mỗi giờ tập tăng thêm đốt trung bình 721.8 kcal ($P < 10^{-15}$).
+            \end{itemize}
+            \begin{block}{Chứng minh tương đương $t_0^2 = f_0$}
+                \[ t_0^2 = \left(\frac{\hat{\beta}_1}{s / \sqrt{S_{xx}}}\right)^2 = \frac{\hat{\beta}_1^2 S_{xx}}{s^2} = \frac{MSR}{MSE} = f_0 \]
+                Thực nghiệm: $t_0^2 = 67.5920^2 = 4568.6744 = f_0$.
+            \end{block}
+        \end{column}
+        \begin{column}{0.52\textwidth}
+            \includegraphics[width=\textwidth]{../outputs/figures/05_slr_bands.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 9: KTC vs Khoảng dự đoán & Ý nghĩa beta0 (Thảo)
+\begin{frame}{8. KTC vs Khoảng Dự đoán \& Ý nghĩa Hệ số chặn (Thảo)}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{So sánh Dải KTC và Dải Dự đoán}:
+            \begin{itemize}
+                \item \textbf{KTC cho $E(Y|x_0)$}: Ước lượng kỳ vọng tổng thể.
+                \[ \hat{y}_0 \pm t \cdot s \sqrt{\frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}} \]
+                \item \textbf{Khoảng dự đoán cho cá thể $y_0$}:
+                \[ \hat{y}_0 \pm t \cdot s \sqrt{\mathbf{1} + \frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}} \]
+                \item \textit{Tại sao luôn rộng hơn?} Vì chứa thêm số hạng ``$+1$'', đại diện cho phương sai sai số tự nhiên của chính cá thể mới: $Var(y_0 - \hat{y}_0) = Var(\hat{y}_0) + \sigma^2$.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Ý nghĩa thực tế của hệ số chặn $\hat{\beta}_0 = -1.45$}
+                \begin{itemize}
+                    \item \textbf{Về thực tế}: Không có buổi tập nào $0$ giờ ($x \in [0.5, 2.0]$). Việc ngoại suy $x=0$ là vô nghĩa.
+                    \item \textbf{Về toán học}: $\hat{\beta}_0$ là \textbf{mỏ neo toán học} bắt buộc để:
+                    \begin{enumerate}
+                        \item Đảm bảo tổng phần dư $\sum e_i = 0$.
+                        \item Buộc đường hồi quy đi qua $(\bar{x}, \bar{y})$.
+                        \item Giữ phân rã $SST = SSR + SSE$.
+                    \end{enumerate}
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 10: Chương 4.2 - Phần dư & Tương quan tuyến tính (Khánh)
+\begin{frame}{9. Chương 4.2: Phân tích Phần dư \& Biến đổi Fisher Z (Khánh)}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Chẩn đoán phần dư}:
+            \begin{itemize}
+                \item $E(e_i) \approx 0$, Skewness = $-0.02$, Kurtosis = $0.05$.
+                \item Phân tán thuần nhất (Homoscedasticity).
+                \item Q-Q plot bám sát đường 45° chuẩn.
+            \end{itemize}
+            \vspace{5pt}
+            \textbf{Hệ số tương quan Pearson $r = 0.9081$}:
+            \begin{itemize}
+                \item Kiểm định $H_0: \rho = 0$: $t_0 = 67.592$ ($P < 10^{-15}$).
+                \item Biến đổi Fisher: $Z = \text{arctanh}(r) = 1.5167$.
+                \item Kiểm định $H_0: \rho = 0.85$: $Z_0 = 8.1633$ $\rightarrow$ Bác bỏ.
+                \item KTC 95\% cho $\rho$: $[0.8965, 0.9185]$.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{../outputs/figures/06_residual_diagnostics.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 11: Vấn đáp trọng tâm & Tương quan vs Nhân quả (Cả hai)
+\begin{frame}{10. Trả lời Câu hỏi Trọng tâm: Tương quan vs Nhân quả (Cả hai)}
+    \begin{block}{Nguyên lý cốt lõi: ``Tương quan không đồng nghĩa với Nhân quả''}
+        Mặc dù hệ số $r = 0.9081$ rất cao, \textbf{thời lượng tập KHÔNG PHẢI nguyên nhân duy nhất} quyết định lượng calo đốt cháy!
+    \end{block}
+    \vspace{5pt}
+    \textbf{Các biến giấu mặt (Confounding / Lurking Variables) cùng chi phối}:
+    \begin{enumerate}
+        \item \textbf{Cường độ gắng sức tim mạch (\texttt{Avg\_BPM}, \texttt{Max\_BPM})}: Người tập ở nhịp tim $160$ BPM đốt calo gấp rưỡi so với người tập ở nhịp tim $110$ BPM trong cùng $1$ giờ.
+        \item \textbf{Khối lượng cơ thể (\texttt{Weight})}: Người nặng cân hơn đòi hỏi tiêu hao công năng cơ học lớn hơn.
+        \item \textbf{Loại bài tập (\texttt{Workout\_Type})}: HIIT và Cardio đốt calo theo phút vượt trội so với Yoga.
+    \end{enumerate}
+    \vspace{3pt}
+    $\longrightarrow$ \textbf{Định hướng phát triển bắt buộc}: Mở rộng sang \textbf{Hồi quy tuyến tính bội} (\texttt{Multiple Regression}) để kiểm soát đồng thời các biến can thiệp.
+\end{frame}
+
+% Slide 12: Tổng kết & Kết luận
+\begin{frame}{11. Tổng kết \& Nghiệm thu Dự án}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Sản phẩm hoàn thành}:
+            \begin{itemize}
+                \item \texttt{main.py}: Chạy tuần tự 6 mô-đun \& kiểm tra chéo tự động trong $25$ giây.
+                \item Toàn văn báo cáo khoa học PDF: \texttt{BaoCao\_SLTK\_Nhom18.pdf}.
+                \item Slide thuyết trình Beamer PDF: \texttt{Slide\_ThuyetTrinh\_Nhom18.pdf}.
+                \item Repository GitHub đầy đủ mã nguồn và dữ liệu.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Thông điệp kết luận}
+                Phương pháp suy luận thống kê cung cấp bộ công cụ định lượng khoa học và khách quan, biến dữ liệu thô thành tri thức thực tiễn có độ tin cậy cao!
+            \end{block}
+            \vspace{15pt}
+            \centering
+            {\Large\bfseries CẢM ƠN THẦY VÀ CÁC BẠN\\ĐÃ LẮNG NGHE!}\\[10pt]
+            \textit{Hỏi đáp \& Thảo luận nội bộ}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\end{document}
