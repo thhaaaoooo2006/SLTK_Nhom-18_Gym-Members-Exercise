@@ -15,37 +15,40 @@
 
 ---
 
-## Slide 2: Mục tiêu nghiên cứu & Tổng quan dữ liệu (Người trình bày: Thảo)
+## Slide 2: Mục tiêu nghiên cứu và Tổng quan dữ liệu (Người trình bày: Thảo)
 - **Mục tiêu nghiên cứu**:
-  - Áp dụng hệ thống lý thuyết ước lượng, kiểm định giả thuyết tham số & phi tham số, ANOVA và hồi quy tuyến tính.
+  - Áp dụng hệ thống lý thuyết ước lượng, kiểm định giả thuyết tham số và phi tham số, ANOVA và hồi quy tuyến tính.
   - Phân tích mối quan hệ giữa lượng calo tiêu thụ (`Calories_Burned`) với thời lượng buổi tập (`Session_Duration`), loại hình bài tập (`Workout_Type`) và giới tính (`Gender`).
 - **Tổng quan bộ dữ liệu**:
   - Quy mô: $n = 973$ thành viên phòng gym, theo dõi 15 biến (12 biến định lượng, 3 biến định tính).
-  - Chất lượng dữ liệu: Đạt độ toàn vẹn 100% (0 missing values, 0 duplicate rows).
+  - Chất lượng dữ liệu: Đạt độ toàn vẹn 100% (0 giá trị khuyết, 0 bản ghi trùng).
 
 ---
 
-## Slide 3: Chương 1 - Cơ sở toán học Mẫu ngẫu nhiên (Người trình bày: Thảo)
-- **Mẫu ngẫu nhiên (Random Sample)**: $(X_1, X_2, \dots, X_n)$ là các biến ngẫu nhiên độc lập cùng phân phối ($iid$) theo $F(x)$ của tổng thể.
-- **Trung bình mẫu**: $\bar{X} = \frac{1}{n} \sum_{i=1}^n X_i$ là ước lượng không chệch, vững cho $\mu$.
-- **Phương sai mẫu hiệu chỉnh**:
-  $$S^2 = \frac{1}{n - 1} \sum_{i=1}^n (X_i - \bar{X})^2$$
-  *Điều kiện bắt buộc*: Chia cho bậc tự do $n - 1$ thay vì $n$ để $E(S^2) = \sigma^2$ (loại bỏ độ chệch).
-- **Tần suất mẫu**: $\hat{p} = \frac{k}{n}$, ước lượng không chệch cho tỷ lệ tổng thể $p$.
-- **Kiểm định ngoại lai**: Áp dụng hàng rào IQR Tukey $[Q_1 - 1.5 IQR, Q_3 + 1.5 IQR]$, giữ nguyên toàn bộ 973 mẫu vì phản ánh thể lực thực tế của vận động viên.
+## Slide 3: Chương 1 - Mẫu ngẫu nhiên và các đặc trưng mẫu (Người trình bày: Thảo)
+- **Mẫu ngẫu nhiên**: $W_X = (X_1, X_2, \dots, X_n)$ kích thước $n$ lập từ biến ngẫu nhiên gốc $X$, gồm $n$ biến ngẫu nhiên độc lập có cùng phân phối xác suất với $X$. Mẫu cụ thể (thể hiện): $W_x = (x_1, x_2, \dots, x_n)$.
+- **Trung bình mẫu**: $\bar{X} = \frac{1}{n} \sum_{i=1}^n X_i$, $E(\bar{X}) = \mu, V(\bar{X}) = \frac{\sigma^2}{n}$. Giá trị quan sát: $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$.
+- **Phương sai mẫu và Phương sai mẫu hiệu chỉnh**:
+  - Phương sai mẫu: $\widetilde{S}^2 = \frac{1}{n} \sum_{i=1}^n (X_i - \bar{X})^2$, $E(\widetilde{S}^2) = \frac{n-1}{n}\sigma^2$.
+  - Phương sai mẫu hiệu chỉnh: $S^2 = \frac{n}{n-1}\widetilde{S}^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar{X})^2$, $E(S^2) = \sigma^2$ (ước lượng không chệch cho $\sigma^2$). Giá trị quan sát: $s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2$.
+- **Tần suất mẫu**: $\widehat{P} = \frac{Y}{n}$ ($Y$ là số lần xuất hiện biến cố trong $n$ phép thử), $E(\widehat{P}) = p, V(\widehat{P}) = \frac{p(1-p)}{n}$. Giá trị quan sát: $\hat{p} = \frac{y}{n}$.
+- **Phân phối mẫu khi $X \sim \mathcal{N}(\mu, \sigma^2)$**:
+  - $U = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim \mathcal{N}(0, 1)$ (khi $\sigma^2$ đã biết).
+  - $T = \frac{\bar{X} - \mu}{S/\sqrt{n}} \sim \mathcal{T}(n-1)$ (khi $\sigma^2$ chưa biết).
+  - $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$.
 
 ---
 
 ## Slide 4: Bảng Thống kê Mô tả Thực nghiệm (Người trình bày: Thảo)
-| Biến số | Trung bình ($\bar{x}$) | Độ lệch chuẩn ($S$) | Trung vị | Min | Max |
+| Biến số | Trung bình ($\bar{x}$) | Độ lệch chuẩn ($s$) | Trung vị | Min | Max |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | `Calories_Burned` (kcal) | 905.42 | 272.64 | 893.00 | 285.00 | 1650.00 |
 | `Session_Duration` (giờ) | 1.256 | 0.343 | 1.25 | 0.50 | 2.00 |
 | `Avg_BPM` (nhịp/phút) | 143.44 | 15.23 | 143.00 | 120.00 | 170.00 |
 | `Weight` (kg) | 73.09 | 15.00 | 72.80 | 40.00 | 115.00 |
-- Tỷ lệ giới tính: Nam chiếm 52.52% ($k = 511$), Nữ chiếm 47.48% ($k = 462$).
-- Loại bài tập phân bổ đều: Cardio (25.80%), HIIT (25.39%), Strength (24.77%), Yoga (24.05%).
-*(Toàn bộ các chỉ số được tính bằng mã nguồn tự cài đặt trong `src/stats_utils.py`)*
+- Tỷ lệ giới tính: Nam chiếm 52.52% ($y = 511$, $\hat{p} = 52.52\%$).
+- Loại bài tập: Cardio ($y = 251$, $\hat{p} = 25.80\%$), HIIT ($y = 247$, $\hat{p} = 25.39\%$), Strength (24.77%), Yoga (24.05%).
+*(Các đại lượng được tính trên mẫu cụ thể theo đúng công thức đặc trưng mẫu lý thuyết)*
 
 ---
 
@@ -77,37 +80,59 @@
 
 ---
 
-## Slide 7: Chương 3 - ANOVA 1 Nhân tố & Kiểm định Phi tham số (Người trình bày: Thảo)
-- **ANOVA 1 nhân tố so sánh Calories theo Workout\_Type**:
-  - $H_0: \mu_{\text{Cardio}} = \mu_{\text{HIIT}} = \mu_{\text{Strength}} = \mu_{\text{Yoga}}$.
-  - Phân tích phương sai: $SSF = 1,481,280.95$ ($df=3$), $SSE = 70,770,775.14$ ($df=969$).
-  - Thống kê $F = 6.7644 > F_{0.05; 3, 969} = 2.6141$ ($P = 0.00016$).
-  - $\rightarrow$ **Bác bỏ $H_0$**: Loại bài tập có tác động thực sự đến lượng calo tiêu thụ (Cardio và HIIT dẫn đầu).
-- **Kiểm định phi tham số Chi-bình phương**:
-  - *Kiểm định phù hợp phân phối chuẩn*: `Session_Duration` ($\chi^2 = 2.4578, P = 0.9303$), `Calories_Burned` ($\chi^2 = 5.2140, P = 0.6338$). Cả hai đều phù hợp rất tốt với phân phối chuẩn!
-  - *Kiểm định độc lập*: `Gender` và `Experience_Level` ($\chi^2 = 0.0128, P = 0.9936$). Không bác bỏ $H_0$: Giới tính và Cấp độ kinh nghiệm hoàn toàn độc lập.
+## Slide 7: Chương 3 - ANOVA một nhân tố và kiểm định phi tham số (Người trình bày: Thảo)
+- **Phân tích phương sai một nhân tố (ANOVA)**:
+  - Cặp giả thuyết: $H_0: \mu_1 = \mu_2 = \mu_3 = \mu_4$ đối với $H_1$: Tồn tại ít nhất 2 kỳ vọng khác nhau ($k = 4$ mức loại bài tập; $n = 973$).
+  - Bảng phân tích phương sai:
+    - Do nhân tố: $SSF = 1,481,280.95$ (bậc tự do $k-1 = 3$), $MSF = SSF/3 = 493,760.32$.
+    - Sai số: $SSE = 70,770,775.14$ (bậc tự do $n-k = 969$), $MSE = SSE/969 = 73,034.86$.
+    - Tổng biến thiên: $SST = SSF + SSE = 72,252,056.09$ (bậc tự do $n-1 = 972$).
+  - Tiêu chuẩn kiểm định: $F_0 = \frac{MSF}{MSE}$, giá trị quan sát $f_0 = 6.7644$.
+  - Miền bác bỏ: $W_\alpha = (f_{\alpha; k-1; n-k}; +\infty) = (f_{0.05; 3; 969}; +\infty) = (2.6141; +\infty)$.
+  - Vì $f_0 = 6.7644 \in W_\alpha$ ($P = 0.00016 < 0.05$) $\rightarrow$ **Bác bỏ $H_0$**: Loại bài tập có tác động thực sự đến lượng calo tiêu thụ.
+- **Kiểm định phi tham số Khi-bình phương**:
+  - *Kiểm định giả thuyết về phân phối của biến ngẫu nhiên*:
+    - Tiêu chuẩn kiểm định: $\chi^2 = \sum_{i=1}^k \frac{(n_i - n P_i)^2}{n P_i}$.
+    - `Session_Duration`: Giá trị quan sát $\chi_0^2 = 2.4578, P = 0.9303 > 0.05$.
+    - `Calories_Burned`: Giá trị quan sát $\chi_0^2 = 5.2140, P = 0.6338 > 0.05$.
+    - $\rightarrow$ Chưa có cơ sở bác bỏ $H_0$: Cả hai đều phù hợp rất tốt với phân phối chuẩn!
+  - *Kiểm định tính độc lập giữa hai dấu hiệu định tính*:
+    - Cặp giả thuyết: $H_0$: `Gender` và `Experience_Level` độc lập.
+    - Bảng tiếp biến $h \times k = 2 \times 3$, bậc tự do $(h-1)(k-1) = 2$.
+    - Tiêu chuẩn: $\chi^2 = n\left(\sum_{i=1}^h \sum_{j=1}^k \frac{n_{ij}^2}{n_i m_j} - 1\right)$.
+    - Miền bác bỏ: $W_{0.05} = (\chi^2_{0.05; 2}; +\infty) = (5.9915; +\infty)$.
+    - Giá trị quan sát: $\chi_0^2 = 0.0128 \notin W_{0.05}$ ($P = 0.9936$). Chưa có cơ sở bác bỏ $H_0$: Giới tính và cấp độ kinh nghiệm độc lập nhau.
 
 ---
 
-## Slide 8: Chương 4.1 - Hồi quy Tuyến tính Đơn OLS (Người trình bày: Thảo)
-- **Phương trình OLS**: $\hat{y} = -1.4465 + 721.7860 \cdot x$
-  - Hệ số góc $\hat{\beta}_1 = 721.79$: Mỗi giờ tập thêm làm tăng trung bình $721.8$ kcal đốt cháy ($P < 10^{-15}$).
-  - Hệ số xác định $R^2 = 0.8247$: $82.47\%$ biến thiên lượng calo được giải thích tuyến tính bởi thời lượng tập.
-- **Chứng minh tính tương đương cốt lõi $t_0^2 = f_0$**:
-  $$t_0^2 = \left(\frac{\hat{\beta}_1}{s/\sqrt{S_{xx}}}\right)^2 = \frac{\hat{\beta}_1^2 S_{xx}}{s^2} = \frac{SSR}{MSE} = f_0$$
-  Thực nghiệm: $t_0^2 = 67.5920^2 = 4568.6744 = f_0$. Kiểm định $t$ và $F$ cho hệ số góc là tương đương hoàn toàn!
-- **Đồ thị minh họa**: Đường OLS, Dải tin cậy 95% cho $E(Y|x_0)$ và Dải dự đoán 95% cho quan sát mới $y_0$.
+## Slide 8: Chương 4.1 - Hồi quy Tuyến tính Đơn và Phương pháp Bình phương Nhỏ nhất (Người trình bày: Thảo)
+- **Mô hình hồi quy tuyến tính đơn biến**: $Y = \beta_0 + \beta_1 x + \varepsilon$, trong đó sai số ngẫu nhiên $\varepsilon \sim \mathcal{N}(0, \sigma^2)$.
+- **Hàm hồi quy mẫu (thực nghiệm)**: $\hat{y} = -1.4465 + 721.7860 \cdot x$
+  - Hệ số góc $\hat{\beta}_1 = 721.79$: Mỗi giờ tập tăng thêm làm tăng trung bình $721.8$ kcal đốt cháy ($P < 10^{-15}$).
+  - Hệ số xác định $R^2 = 0.8247$: $82.47\%$ biến thiên lượng calo được giải thích bởi thời lượng tập.
+- **Kiểm định hệ số góc và mối liên hệ tương đương $t_0^2 = f_0$**:
+  - Tiêu chuẩn $T_0 = \frac{B_1 - 0}{S/\sqrt{S_{xx}}}$ và Tiêu chuẩn $F_0 = \frac{MSR}{MSE}$:
+  $$t_0^2 = \left(\frac{\hat{\beta}_1}{s/\sqrt{S_{xx}}}\right)^2 = \frac{\hat{\beta}_1^2 S_{xx}}{s^2} = \frac{SSR / 1}{SSE / (n-2)} = \frac{MSR}{MSE} = f_0$$
+  - Thực nghiệm: $t_0^2 = 67.5920^2 = 4568.6744 = f_0 \in W_{0.05}$. Hai kiểm định tương đương hoàn toàn!
+- **Đồ thị minh họa**: Đường hồi quy mẫu, khoảng tin cậy 95% cho phản hồi trung bình $\mu_{Y|x_0}$ và khoảng dự đoán 95% cho quan sát mới $y_0$.
 
 ---
 
-## Slide 9: So sánh KTC vs Khoảng Dự đoán & Ý nghĩa Hệ số chặn (Người trình bày: Thảo)
-- **Tại sao Khoảng Dự đoán luôn rộng hơn Khoảng Tin cậy?**
-  - KTC cho $E(Y|x_0)$: $\hat{y}_0 \pm t \cdot s \sqrt{\frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}}$
-  - KTD cho quan sát mới $y_0$: $\hat{y}_0 \pm t \cdot s \sqrt{\mathbf{1} + \frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}}$
-  - Số hạng **`+1`** bên trong dấu căn phản ánh độ bất định tự nhiên của chính cá thể mới: $Var(y_0 - \hat{y}_0) = Var(\hat{y}_0) + \sigma^2$.
-- **Ý nghĩa thực tế và toán học của hệ số chặn $\hat{\beta}_0 = -1.45$**:
-  - *Về thực tế*: Không ai tập 0 giờ ($x \in [0.5, 2.0]$). Ngoại suy $x=0$ là vô nghĩa.
-  - *Về toán học*: $\hat{\beta}_0$ là mỏ neo bắt buộc để $\sum e_i = 0$, đường hồi quy qua trọng tâm mẫu $(\bar{x}, \bar{y})$ và bảo toàn phân rã $SST = SSR + SSE$.
+## Slide 9: Khoảng tin cậy, khoảng dự đoán và ý nghĩa hệ số chặn (Người trình bày: Thảo)
+- **Khoảng tin cậy và khoảng dự đoán**:
+  - Khoảng tin cậy cho phản hồi trung bình $\mu_{Y|x_0}$ (Định lý 7):
+    $$\hat{y}_0 \pm t_{\alpha/2, n-2} \cdot s \sqrt{\frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}}$$
+  - Khoảng dự đoán cho một quan sát tương lai $y_0$ tại $x_0$ (Định lý 8):
+    $$\hat{y}_0 \pm t_{\alpha/2, n-2} \cdot s \sqrt{\mathbf{1} + \frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}}$$
+  - *Giải thích độ rộng*: Biến ngẫu nhiên $\widehat{Y}_0 - Y_0$ có kỳ vọng 0 và phương sai:
+    $$\sigma^2_{\widehat{Y}_0 - Y_0} = \sigma^2 \left[1 + \frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}\right]$$
+    Khoảng dự đoán luôn rộng hơn do chứa thêm số hạng 1 phản ánh phương sai của sai số ngẫu nhiên $\varepsilon_0$ của chính quan sát tương lai ($\sigma^2_{\varepsilon_0} = \sigma^2$).
+- **Ý nghĩa của hệ số chặn $\hat{\beta}_0 = -1.45$**:
+  - *Về thực tế*: Hệ số chặn chỉ có ý nghĩa khi biến độc lập nhận giá trị 0. Do thời lượng tập trong mẫu $x \in [0.5, 2.0]$ giờ (không ai tập 0 giờ), việc ngoại suy tại $x=0$ không mang ý nghĩa thực tế.
+  - *Về vai trò kỹ thuật trong mô hình*:
+    1. Giúp xác định đúng bản chất mối quan hệ (tránh áp đặt đi qua gốc tọa độ).
+    2. Đảm bảo tổng phần dư $\sum e_i = 0$ và đường hồi quy đi qua $(\bar{x}, \bar{y})$.
+    3. Đảm bảo ý nghĩa của hệ số xác định $R^2$ và phân rã $SST = SSR + SSE$.
 
 ---
 
