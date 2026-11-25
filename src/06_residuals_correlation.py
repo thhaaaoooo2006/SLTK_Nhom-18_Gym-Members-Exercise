@@ -223,11 +223,10 @@ def main():
 
     # 8. Ghi báo cáo report/sections/06_chap4_corr.md
     md = []
-    md.append("# CHƯƠNG 4 (PHẦN 2): PHÂN TÍCH PHẦN DƯ & TƯƠNG QUAN TUYẾN TÍNH\n")
-    md.append("**Người thực hiện**: Nguyễn Văn Nam Khánh & Nguyễn Thị Thảo\n")
+    md.append("# Chương 4 (phần 2): Phân tích phần dư và tương quan tuyến tính\n")
 
-    md.append("## 1. Cơ sở lý thuyết toán học (Định lý 9, 10 & Biến đổi Fisher Z)\n")
-    md.append(r"""### 1.1. Phân tích phần dư & Giả thiết phương sai thuần nhất (Homoscedasticity)
+    md.append("## 1. Cơ sở lý thuyết toán học (Định lý 9, 10 và biến đổi Fisher Z)\n")
+    md.append(r"""### 1.1. Phân tích phần dư và giả thiết phương sai thuần nhất
 Phần dư thô là độ lệch giữa giá trị quan sát thực tế và giá trị dự báo từ mô hình bình phương bé nhất:
 $$e_i = y_i - \hat{y}_i = y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i), \quad i = 1, \dots, n$$
 Phần dư chuẩn hóa (Standardized Residual):
@@ -246,7 +245,7 @@ $$r = \frac{S_{xy}}{\sqrt{S_{xx} S_{yy}}} = \frac{\sum_{i=1}^n (x_i - \bar{x})(y
 1. **Kiểm định không tương quan ($H_0: \rho = 0$ vs $H_1: \rho \neq 0$ - Định lý 9)**:
    $$t_0 = \frac{r \sqrt{n-2}}{\sqrt{1 - r^2}} \sim t(n - 2)$$
    Miền bác bỏ mức $\alpha$: $|t_0| > t_{\alpha/2, n-2}$. Thống kê này **hoàn toàn tương đương** với kiểm định $t$ cho hệ số góc $\beta_1$ trong hồi quy đơn.
-2. **Kiểm định với giá trị $\rho_0 \neq 0$ & Biến đổi Fisher Z (Định lý 10)**:
+2. **Kiểm định với giá trị $\rho_0 \neq 0$ và biến đổi Fisher Z (Định lý 10)**:
    Khi $\rho \neq 0$, phân phối mẫu của $r$ bị lệch bất đối xứng nghiêm trọng. R.A. Fisher đề xuất phép biến đổi:
    $$Z = \frac{1}{2} \ln \left(\frac{1 + r}{1 - r}\right) = \text{arctanh}(r)$$
    $Z$ tiệm cận chuẩn rất nhanh: $Z \dot{\sim} \mathcal{N}\left(\mu_Z = \frac{1}{2} \ln \frac{1+\rho}{1-\rho}, \; \sigma_Z^2 = \frac{1}{n-3}\right)$.
@@ -284,7 +283,7 @@ $$r = \frac{S_{xy}}{\sqrt{S_{xx} S_{yy}}} = \frac{\sum_{i=1}^n (x_i - \bar{x})(y
     md.append(f"- Khoảng tin cậy của $Z$: $[{z_lower:.4f}, {z_upper:.4f}]$.")
     md.append(f"- **Khoảng tin cậy 95% cho $\\rho$**: $[{rho_lower:.4f}, {rho_upper:.4f}]$. Với độ tin cậy 95%, hệ số tương quan tuyến tính của tổng thể nằm chắc chắn trong dải rất hẹp từ {rho_lower:.4f} đến {rho_upper:.4f}.\n")
 
-    md.append("## 4. Tương quan đa biến & Vấn đề Biến giấu mặt (Lurking Variables)\n")
+    md.append("## 4. Tương quan đa biến và vấn đề biến giấu mặt\n")
     md.append("### 4.1. Ma trận tương quan Pearson giữa các chỉ số thể chất\n")
     md.append(md_table(corr_matrix.reset_index().rename(columns={"index": "Biến"}), nd=4))
     md.append(r"""

@@ -11,6 +11,22 @@
 \usetheme{Boadilla}
 \usecolortheme{whale}
 
+% Bỏ hiệu ứng đổ bóng của tất cả slide
+\setbeamertemplate{blocks}[rounded][shadow=false]
+
+% Bỏ thanh điều hướng beamer
+\setbeamertemplate{navigation symbols}{}
+
+% Bỏ môn học và người thuyết trình ở footer, chỉ để lại số thứ tự trang
+\setbeamertemplate{footline}{
+    \leavevmode%
+    \hbox{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.1ex,right]{page number in head/foot}%
+        \usebeamerfont{page number in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2.5ex}
+    \end{beamercolorbox}}%
+    \vskip0pt%
+}
+
 % Định nghĩa màu sắc
 \definecolor{HUSTRed}{RGB}{186, 12, 47}
 \definecolor{NavyBlue}{RGB}{20, 45, 85}
@@ -20,14 +36,12 @@
 \setbeamercolor{structure}{fg=NavyBlue}
 \setbeamercolor{title}{fg=white,bg=NavyBlue}
 
-\title[Suy luận thống kê -- Nhóm 18]{\textbf{SUY LUẬN THỐNG KÊ TRÊN DỮ LIỆU TẬP LUYỆN GYM}}
-\subtitle{Học phần: Suy luận thống kê (MI3031) -- ĐHBK Hà Nội}
-\author[Thảo và Khánh]{
-    \textbf{Nguyễn Thị Thảo} (MSSV: 202419101) \\
-    \textbf{Nguyễn Văn Nam Khánh} (MSSV: 202419069)
+% Tiêu đề bìa: Thay suy diễn thống kê thành suy luận thống kê, bỏ subtitle học phần
+\title{\textbf{SUY LUẬN THỐNG KÊ TRÊN DỮ LIỆU TẬP LUYỆN GYM}}
+\author[Nam Khánh, Thảo]{
+    \texorpdfstring{\textbf{Nguyễn Văn Nam Khánh} - 202419069 \\ \textbf{Nguyễn Thị Thảo} - 202419101}{Nguyễn Văn Nam Khánh - 202419069, Nguyễn Thị Thảo - 202419101}
 }
-\institute[SAMI - HUST]{
-    Viện Toán ứng dụng và Tin học (SAMI) \\
+\institute{
     Đại học Bách khoa Hà Nội
 }
 \date{Tháng 11 Năm 2026}
@@ -35,32 +49,32 @@
 \begin{document}
 
 % Slide 1: Bìa
-\begin{frame}
+\begin{frame}[plain]
     \titlepage
 \end{frame}
 
-% Slide 2: Mục tiêu nghiên cứu và Tổng quan dữ liệu (Thảo)
-\begin{frame}{1. Tổng quan Đề tài và Bộ Dữ liệu (Thảo)}
+% Slide 2: 1. Tổng quan đề tài và bộ dữ liệu
+\begin{frame}{1. Tổng quan đề tài và bộ dữ liệu}
     \begin{columns}
         \begin{column}{0.55\textwidth}
             \textbf{Mục tiêu nghiên cứu}:
             \begin{itemize}
-                \item Áp dụng lý thuyết \textbf{Suy luận Thống kê (MI3031)} để phân tích các yếu tố ảnh hưởng đến lượng calo tiêu thụ (\texttt{Calories\_Burned}).
+                \item Phân tích các yếu tố ảnh hưởng đến lượng calo tiêu thụ (\texttt{Calories\_Burned}).
                 \item Đánh giá tác động của thời lượng tập (\texttt{Session\_Duration}), loại bài tập (\texttt{Workout\_Type}) và giới tính (\texttt{Gender}).
             \end{itemize}
             \vspace{5pt}
             \textbf{Bộ dữ liệu Gym Members Exercise}:
             \begin{itemize}
-                \item Kích thước mẫu: $n = 973$ thành viên phòng gym.
+                \item Quy mô mẫu: $n = 973$ thành viên phòng gym.
                 \item Gồm 15 biến (12 định lượng, 3 định tính).
-                \item Toàn vẹn: 0 giá trị khuyết, 0 bản ghi trùng.
+                \item $100\%$ sạch: $0$ giá trị khuyết, $0$ bản ghi trùng.
             \end{itemize}
         \end{column}
         \begin{column}{0.45\textwidth}
             \begin{block}{Phân loại biến trọng tâm}
                 \begin{itemize}
-                    \item \textbf{Biến phản hồi ($Y$)}: \texttt{Calories\_Burned} (kcal).
-                    \item \textbf{Biến giải thích ($X$)}: \texttt{Session\_Duration} (giờ).
+                    \item \textbf{Biến phụ thuộc ($Y$)}: \texttt{Calories\_Burned} (kcal).
+                    \item \textbf{Biến độc lập ($x$)}: \texttt{Session\_Duration} (giờ).
                     \item \textbf{Biến phân loại}: \texttt{Gender}, \texttt{Workout\_Type}, \texttt{Experience\_Level}.
                     \item \textbf{Biến sinh lý}: \texttt{Avg\_BPM}, \texttt{Max\_BPM}, \texttt{Weight}, \texttt{BMI}.
                 \end{itemize}
@@ -69,42 +83,25 @@
     \end{columns}
 \end{frame}
 
-% Slide 3: Chương 1 - Mẫu ngẫu nhiên và các đặc trưng mẫu (Thảo)
-\begin{frame}{2. Chương 1: Mẫu ngẫu nhiên và các đặc trưng mẫu (Thảo)}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \begin{block}{Khái niệm mẫu và đặc trưng mẫu}
-                \footnotesize
-                \begin{itemize}\setlength\itemsep{2pt}
-                    \item \textbf{Mẫu ngẫu nhiên}: $W_X = (X_1, X_2, \dots, X_n)$ kích thước $n$ lập từ BNN gốc $X$, gồm các BNN độc lập cùng phân phối với $X$.
-                    \item \textbf{Mẫu cụ thể (thể hiện)}: $W_x = (x_1, x_2, \dots, x_n)$.
-                    \item \textbf{Trung bình mẫu}: $\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i$, $E(\bar{X}) = \mu, V(\bar{X}) = \frac{\sigma^2}{n}$. Giá trị quan sát: $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$.
-                    \item \textbf{Tần suất mẫu}: $\widehat{P} = \frac{Y}{n}$ ($Y$ là số lần xuất hiện), $E(\widehat{P}) = p, V(\widehat{P}) = \frac{p(1-p)}{n}$. Giá trị quan sát: $\hat{p} = \frac{y}{n}$.
-                \end{itemize}
-            \end{block}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{block}{Phương sai mẫu và phân phối mẫu}
-                \footnotesize
-                \begin{itemize}\setlength\itemsep{2pt}
-                    \item \textbf{Phương sai mẫu}: $\widetilde{S}^2 = \frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})^2$, $E(\widetilde{S}^2) = \frac{n-1}{n}\sigma^2$.
-                    \item \textbf{Phương sai mẫu hiệu chỉnh}:
-                    \[ S^2 = \frac{n}{n-1}\widetilde{S}^2 = \frac{1}{n-1}\sum_{i=1}^n (X_i - \bar{X})^2 \]
-                    $E(S^2) = \sigma^2$ (không chệch). Giá trị quan sát: $s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2$.
-                    \item \textbf{Phân phối mẫu khi $X \sim \mathcal{N}(\mu, \sigma^2)$}:
-                    \begin{itemize}\setlength\itemsep{1pt}
-                        \item $U = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim \mathcal{N}(0, 1)$ (khi $\sigma^2$ đã biết).
-                        \item $T = \frac{\bar{X} - \mu}{S/\sqrt{n}} \sim \mathcal{T}(n-1)$ (khi $\sigma^2$ chưa biết).
-                        \item $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$.
-                    \end{itemize}
-                \end{itemize}
-            \end{block}
-        \end{column}
-    \end{columns}
+% Slide 3: 2. Chương 1: mẫu ngẫu nhiên và cơ sở toán học
+\begin{frame}{2. Chương 1: mẫu ngẫu nhiên và cơ sở toán học}
+    \begin{block}{Cơ sở lý thuyết mẫu ngẫu nhiên và thống kê mẫu}
+        \footnotesize
+        \begin{itemize}\setlength\itemsep{1pt}
+            \item \textbf{Mẫu ngẫu nhiên}: $W_X = (X_1, X_2, \dots, X_n)$ kích thước $n$ gồm các biến ngẫu nhiên độc lập có cùng phân phối xác suất với biến ngẫu nhiên gốc $X$. Mẫu cụ thể: $W_x = (x_1, x_2, \dots, x_n)$.
+            \item \textbf{Trung bình mẫu}: $\overline{X} = \frac{1}{n}\sum_{i=1}^n X_i$, có $E(\overline{X}) = \mu$ (ước lượng không chệch) và $V(\overline{X}) = \frac{\sigma^2}{n}$. Giá trị quan sát: $\overline{x} = \frac{1}{n}\sum_{i=1}^n x_i$.
+            \item \textbf{Phương sai mẫu và phương sai mẫu hiệu chỉnh}:
+            \[ \widetilde{S}^2 = \frac{1}{n}\sum_{i=1}^n (X_i - \overline{X})^2 \quad \longrightarrow \quad S^2 = \frac{n}{n-1}\widetilde{S}^2 = \frac{1}{n-1}\sum_{i=1}^n (X_i - \overline{X})^2 \]
+            Ta có $E(\widetilde{S}^2) = \frac{n-1}{n}\sigma^2$ (ước lượng chệch), trong khi $E(S^2) = \sigma^2$ (ước lượng không chệch).
+            \item \textbf{Tần suất mẫu}: $\widehat{P} = \frac{Y}{n}$ (với $Y \sim B(n, p)$), $E(\widehat{P}) = p, V(\widehat{P}) = \frac{p(1-p)}{n}$. Giá trị quan sát: $f = k/n$.
+        \end{itemize}
+    \end{block}
+    \vspace{2pt}
+    \footnotesize\textbf{Phân phối mẫu}: Khi kích thước mẫu lớn ($n = 973 \ge 30$), theo Định lý giới hạn trung tâm, thống kê $Z = \frac{\overline{X} - \mu}{S/\sqrt{n}} \xrightarrow{d} N(0, 1)$, thống kê $T = \frac{\overline{X} - \mu}{S/\sqrt{n}} \sim t(n-1)$, và $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$.
 \end{frame}
 
-% Slide 4: Bảng mô tả thực nghiệm (Thảo)
-\begin{frame}{3. Bảng Thống kê Mô tả Thực nghiệm ($n = 973$) (Thảo)}
+% Slide 4: 3. Thống kê mô tả thực nghiệm ($n = 973$)
+\begin{frame}{3. Thống kê mô tả thực nghiệm ($n = 973$)}
     \begin{table}[H]
     \centering\footnotesize
     \begin{tabular}{lrrrrrr}
@@ -116,177 +113,161 @@
     \texttt{Avg\_BPM} (nhịp/phút) & 143.44 & 15.23 & 143.00 & 120.00 & 170.00 \\
     \texttt{Weight} (kg) & 73.09 & 15.00 & 72.80 & 40.00 & 115.00 \\
     \midrule
-    \texttt{Gender = Male} & \multicolumn{5}{c}{$y = 511$, $\hat{p} = 52.52\%$} \\
-    \texttt{Workout\_Type: Cardio} & \multicolumn{5}{c}{$y = 251$, $\hat{p} = 25.80\%$} \\
-    \texttt{Workout\_Type: HIIT} & \multicolumn{5}{c}{$y = 247$, $\hat{p} = 25.39\%$} \\
+    \texttt{Gender = Male} & \multicolumn{5}{c}{$k = 511$, $f = 52.52\%$} \\
+    \texttt{Workout\_Type: Cardio} & \multicolumn{5}{c}{$k = 251$, $f = 25.80\%$} \\
+    \texttt{Workout\_Type: HIIT} & \multicolumn{5}{c}{$k = 247$, $f = 25.39\%$} \\
     \bottomrule
     \end{tabular}
     \end{table}
-    \textit{Các đại lượng được tính trên mẫu cụ thể theo đúng công thức đặc trưng mẫu lý thuyết.}
+    \textit{Toàn bộ các hàm thống kê được nhóm tự cài đặt trong mô-đun \texttt{src/stats\_utils.py}.}
 \end{frame}
 
-% Slide 5: Chương 2 - Ước lượng điểm & KTC 95% (Khánh)
-\begin{frame}{4. Chương 2: Ước lượng Điểm \& Khoảng tin cậy 95\% (Khánh)}
+% Slide 5: 4. Chương 2: ước lượng điểm và khoảng tin cậy 95%
+\begin{frame}{4. Chương 2: ước lượng điểm và khoảng tin cậy 95\%}
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \textbf{Phương pháp ước lượng điểm}:
             \begin{itemize}
-                \item \textbf{MoM \& MLE} cho $\mu$: $\hat{\mu} = \bar{X} = 905.42$ kcal.
-                \item \textbf{MLE} cho $\sigma^2$: $\hat{\sigma}^2 = \frac{1}{n}\sum (X_i - \bar{X})^2$ (chệch dưới). Nhân $\frac{n}{n-1}$ thu được $S^2 = 0.1177$ (hiệu chỉnh không chệch).
+                \item \textbf{Phương pháp mô men và hợp lý cực đại} cho $\mu$: $\hat{\mu} = \bar{x} = 905.42$ kcal.
+                \item \textbf{Phương pháp hợp lý cực đại} cho $\sigma^2$: $\hat{\sigma}^2 = \frac{1}{n}\sum (x_i - \bar{x})^2$ (chệch dưới). Nhân $\frac{n}{n-1}$ thu được $s^2 = 0.1177$ (hiệu chỉnh không chệch).
             \end{itemize}
             \vspace{5pt}
-            \textbf{Diễn giải tần suất 95\%}:
+            \textbf{Diễn giải tần suất độ tin cậy 95\%}:
             \begin{quote}
                 \small ``Nếu lặp lại việc lấy mẫu độc lập 973 người vô hạn lần, thì 95\% các khoảng tin cậy tính được sẽ chứa đúng tham số thực của tổng thể.''
             \end{quote}
         \end{column}
         \begin{column}{0.5\textwidth}
-            \begin{block}{Kết quả KTC 95\% Hai phía}
+            \begin{block}{Kết quả khoảng tin cậy 95\% hai phía}
                 \footnotesize
                 \begin{itemize}
-                    \item $\mu_{\text{Calories}}$: $[888.27, 922.57]$ ($t$-Student, $df=972$).
-                    \item $\sigma^2_{\text{Duration}}$: $[0.1079, 0.1289]$ ($\chi^2$, $df=972$).
-                    \item $\sigma_{\text{Duration}}$: $[0.3284, 0.3590]$ ($\sqrt{\chi^2}$).
-                    \item $p_{\text{Male}}$: $[0.4938, 0.5566]$ (Wald z).
-                    \item $\mu_1 - \mu_2$ (Male -- Female): $[48.47, 115.95]$ ($t$-Welch, do $\sigma_1^2 \ne \sigma_2^2$).
-                    \item $p_1 - p_2$ (Calo $\ge 1000$): $[0.0735, 0.1912]$.
+                    \item $\mu_{\text{Calories}}$: $[888.27, 922.57]$ (phân phối Student $t$, bậc tự do $972$).
+                    \item $\sigma^2_{\text{Duration}}$: $[0.1079, 0.1289]$ (phân phối $\chi^2$, bậc tự do $972$).
+                    \item $\sigma_{\text{Duration}}$: $[0.3284, 0.3590]$ (căn bậc hai khoảng tin cậy $\sigma^2$).
+                    \item $p_{\text{Male}}$: $[0.4938, 0.5566]$ (xấp xỉ phân phối chuẩn tắc $Z$).
+                    \item $\mu_1 - \mu_2$ (Nam -- Nữ): $[48.47, 115.95]$ (hai phương sai chưa biết, khác nhau).
+                    \item $p_1 - p_2$ (Calo $\ge 1000$): $[0.0735, 0.1912]$ (xấp xỉ chuẩn tắc $Z$).
                 \end{itemize}
             \end{block}
         \end{column}
     \end{columns}
 \end{frame}
 
-% Slide 6: Chương 3 - Kiểm định tham số 1 & 2 tổng thể (Khánh)
-\begin{frame}{5. Chương 3: Kiểm định Tham số \& 3 Cách Tiếp cận (Khánh)}
-    \begin{block}{Quy trình 5 bước và Tính nhất quán của 3 cách tiếp cận}
-        (1) Giả thiết $H_0/H_1$ $\rightarrow$ (2) Chọn $\alpha = 0.05$ $\rightarrow$ (3) Thống kê kiểm định $T$ $\rightarrow$ (4) Tính $t_{\text{obs}}, P$-value $\rightarrow$ (5) Kết luận.
+% Slide 6: 5. Chương 3: kiểm định tham số và 3 cách tiếp cận
+\begin{frame}{5. Chương 3: kiểm định tham số và 3 cách tiếp cận}
+    \begin{block}{Quy trình kiểm định và tính nhất quán của 3 cách tiếp cận}
+        \footnotesize
+        (1) Cặp giả thuyết $H_0/H_1$ $\rightarrow$ (2) Mức ý nghĩa $\alpha = 0.05$ $\rightarrow$ (3) Tiêu chuẩn kiểm định $\rightarrow$ (4) Tính giá trị quan sát, $P$-giá trị $\rightarrow$ (5) Kết luận.
         \begin{itemize}
-            \item \textbf{Cách 1 (Miền bác bỏ)}: $t_{\text{obs}} \in W_\alpha$.
-            \item \textbf{Cách 2 ($P$-value)}: $P \le \alpha = 0.05$.
-            \item \textbf{Cách 3 (Đối chiếu KTC)}: Giá trị $\theta_0$ không thuộc KTC 95\% tương ứng.
+            \item \textbf{Cách 1 (Miền bác bỏ)}: Giá trị quan sát rơi vào miền bác bỏ $W_\alpha$.
+            \item \textbf{Cách 2 ($P$-giá trị)}: $P\text{-giá trị} \le \alpha = 0.05$.
+            \item \textbf{Cách 3 (Đối chiếu khoảng tin cậy)}: Giá trị giả định $\theta_0$ không thuộc khoảng tin cậy 95\% tương ứng.
         \end{itemize}
     \end{block}
 
     \begin{table}[H]
-    \centering\footnotesize
-    \begin{tabular}{lcccc}
+    \centering\scriptsize
+    \begin{tabular}{@{}lcccc@{}}
     \toprule
-    \textbf{Kiểm định} & \textbf{Giả thuyết $H_0$} & \textbf{Thống kê} & \textbf{$P$-value} & \textbf{Kết luận ($\alpha = 0.05$)} \\
+    \textbf{Kiểm định} & \textbf{Giả thuyết $H_0$} & \textbf{Thống kê quan sát} & \textbf{$P$-giá trị} & \textbf{Kết luận ($\alpha = 0.05$)} \\
     \midrule
-    Kỳ vọng Calo & $\mu = 900$ & $T = 0.620$ & 0.5352 & Không bác bỏ $H_0$ \\
-    Phương sai Thời lượng & $\sigma^2 = 0.10$ & $\chi^2 = 1143.77$ & 0.0002 & \textbf{Bác bỏ $H_0$} \\
-    Tỷ lệ Nam giới & $p = 0.50$ & $Z = 1.571$ & 0.1162 & Không bác bỏ $H_0$ \\
-    So sánh 2 phương sai Calo & $\sigma_1^2 = \sigma_2^2$ & $F = 1.318$ & 0.0025 & \textbf{Bác bỏ $H_0$} ($\sigma_1^2 \ne \sigma_2^2$) \\
-    So sánh 2 kỳ vọng Calo & $\mu_1 = \mu_2$ & $T_W = 4.781$ & $2.01 \times 10^{-6}$ & \textbf{Bác bỏ $H_0$} (Nam đốt calo cao hơn) \\
+    Kỳ vọng Calo & $\mu = 900$ & $t_0 = 0.620$ & 0.5352 & Không bác bỏ $H_0$ \\
+    Phương sai Thời lượng & $\sigma^2 = 0.10$ & $k_0^2 = 1143.77$ & 0.0002 & \textbf{Bác bỏ $H_0$} \\
+    Tỷ lệ Nam giới & $p = 0.50$ & $z_0 = 1.571$ & 0.1162 & Không bác bỏ $H_0$ \\
+    So sánh 2 phương sai Calo & $\sigma_1^2 = \sigma_2^2$ & $f_0 = 1.318$ & 0.0025 & \textbf{Bác bỏ $H_0$} ($\sigma_1^2 \ne \sigma_2^2$) \\
+    So sánh 2 kỳ vọng Calo & $\mu_1 = \mu_2$ & $t_0 = 4.781$ & $2.01 \times 10^{-6}$ & \textbf{Bác bỏ $H_0$} (Nam đốt calo cao hơn) \\
     \bottomrule
     \end{tabular}
     \end{table}
 \end{frame}
 
-% Slide 7: Chương 3 - ANOVA một nhân tố và kiểm định phi tham số (Thảo)
-\begin{frame}{6. Chương 3: ANOVA một nhân tố và kiểm định phi tham số (Thảo)}
+% Slide 7: 6. Chương 3: phân tích phương sai một nhân tố và phi tham số
+\begin{frame}{6. Chương 3: phân tích phương sai một nhân tố và phi tham số}
     \begin{columns}
-        \begin{column}{0.48\textwidth}
-            \textbf{Phân tích phương sai một nhân tố (ANOVA)}:
-            \[ H_0: \mu_1 = \mu_2 = \mu_3 = \mu_4 \]
-            \footnotesize
-            (với $k = 4$ mức: Cardio, HIIT, Strength, Yoga; $n = 973$)
-            \vspace{2pt}
+        \begin{column}{0.5\textwidth}
+            \textbf{Phân tích phương sai một nhân tố}:
+            \[ H_0: \mu_{\text{Cardio}} = \mu_{\text{HIIT}} = \mu_{\text{Strength}} = \mu_{\text{Yoga}} \]
             \begin{table}[H]
             \centering\scriptsize
             \begin{tabular}{lrrrr}
             \toprule
-            \textbf{Nguồn biến thiên} & \textbf{SS} & \textbf{df} & \textbf{MS} & \textbf{Tiêu chuẩn $F_0$} \\
+            \textbf{Nguồn biến thiên} & \textbf{SS} & \textbf{Bậc tự do} & \textbf{MS} & \textbf{Thống kê $F_0$} \\
             \midrule
-            Do nhân tố ($SSF$) & $1.48 \times 10^6$ & 3 & 493,760 & \textbf{6.7644} \\
-            Sai số ($SSE$) & $7.08 \times 10^7$ & 969 & 73,035 & -- \\
+            Nhân tố (giữa các nhóm) & $1.48 \times 10^6$ & 3 & 493,760 & \textbf{6.7644} \\
+            Sai số (trong nội bộ) & $7.08 \times 10^7$ & 969 & 73,035 & -- \\
             \bottomrule
             \end{tabular}
             \end{table}
-            \vspace{2pt}
-            \begin{itemize}\setlength\itemsep{1pt}
-                \item Miền bác bỏ: $W_{0.05} = (f_{0.05; 3; 969}; +\infty) = (2.6141; +\infty)$.
-                \item Vì $f_0 = 6.7644 \in W_{0.05}$ ($P = 0.00016 < 0.05$).
-                \item $\rightarrow$ \textbf{Bác bỏ $H_0$}: Loại bài tập có ảnh hưởng thực sự đến lượng calo đốt cháy.
-            \end{itemize}
+            $F_0 = 6.7644 > f_{0.05; 3; 969} = 2.6141$ ($P\text{-giá trị} = 0.00016$).
+            $\rightarrow$ \textbf{Bác bỏ $H_0$}: Loại bài tập có ảnh hưởng thực sự đến lượng calo tiêu thụ.
         \end{column}
-        \begin{column}{0.52\textwidth}
-            \textbf{Kiểm định phi tham số Khi-bình phương}:
-            \footnotesize
-            \begin{itemize}\setlength\itemsep{2pt}
-                \item \textbf{Kiểm định về phân phối của biến ngẫu nhiên}:\\
-                Tiêu chuẩn kiểm định: $\chi^2 = \sum_{i=1}^k \frac{(n_i - n P_i)^2}{n P_i}$.
-                \begin{itemize}\setlength\itemsep{1pt}
-                    \item \texttt{Session\_Duration}: $\chi_0^2 = 2.4578, P = 0.9303 > 0.05$.
-                    \item \texttt{Calories\_Burned}: $\chi_0^2 = 5.2140, P = 0.6338 > 0.05$.
-                    \item $\rightarrow$ Phù hợp tốt với phân phối chuẩn.
+        \begin{column}{0.5\textwidth}
+            \textbf{Kiểm định phi tham số Chi-bình phương}:
+            \begin{itemize}
+                \item \textbf{Sự phù hợp của phân phối xác suất (chuẩn)}:
+                \begin{itemize}
+                    \item \texttt{Session\_Duration}: $k_0^2 = 2.4578, P = 0.9303 > 0.05$.
+                    \item \texttt{Calories\_Burned}: $k_0^2 = 5.2140, P = 0.6338 > 0.05$.
+                    \item $\rightarrow$ Phù hợp với phân phối chuẩn!
                 \end{itemize}
-                \item \textbf{Kiểm định tính độc lập giữa hai dấu hiệu}:
-                \begin{itemize}\setlength\itemsep{1pt}
-                    \item $H_0$: Giới tính và Cấp độ kinh nghiệm độc lập.
-                    \item Bảng tiếp biến $2 \times 3$, bậc tự do là $2$.
-                    \item Tiêu chuẩn: $\chi^2 = n\left(\sum_{i=1}^h \sum_{j=1}^k \frac{n_{ij}^2}{n_i m_j} - 1\right)$.
-                    \item $\chi_0^2 = 0.0128 \notin W_{0.05} = (5.9915; +\infty)$ ($P = 0.9936$).
-                    \item $\rightarrow$ Không bác bỏ $H_0$: Hai dấu hiệu độc lập.
+                \item \textbf{Kiểm định tính độc lập}:
+                \begin{itemize}
+                    \item Bảng tiếp biến $2 \times 3$, bậc tự do $(2-1)(3-1) = 2$.
+                    \item $k_0^2 = 0.0128 < \chi^2_{0.05; 2} = 5.9915$ ($P = 0.9936$).
+                    \item $\rightarrow$ Không bác bỏ $H_0$: Giới tính và cấp độ kinh nghiệm độc lập nhau!
                 \end{itemize}
             \end{itemize}
         \end{column}
     \end{columns}
 \end{frame}
 
-% Slide 8: Chương 4.1 - Hồi quy tuyến tính đơn và bình phương nhỏ nhất (Thảo)
-\begin{frame}{7. Chương 4.1: Hồi quy tuyến tính đơn và bình phương nhỏ nhất (Thảo)}
+% Slide 8: 7. Chương 4.1: hồi quy tuyến tính đơn
+\begin{frame}{7. Chương 4.1: hồi quy tuyến tính đơn}
     \begin{columns}
-        \begin{column}{0.48\textwidth}
+        \begin{column}{0.5\textwidth}
+            \textbf{Mô hình hồi quy tuyến tính đơn}:
+            \[ Y = \beta_0 + \beta_1 x + \varepsilon, \quad \varepsilon \sim N(0, \sigma^2) \]
             \footnotesize
-            \textbf{Mô hình hồi quy tuyến tính đơn biến}:
-            \[ Y = \beta_0 + \beta_1 x + \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, \sigma^2) \]
-            Hàm hồi quy mẫu: $\hat{y} = -1.4465 + 721.7860 \cdot x$
-            \vspace{2pt}
-            \begin{itemize}\setlength\itemsep{1pt}
+            \begin{itemize}\setlength\itemsep{1.5pt}
+                \item Phương trình hồi quy mẫu (bình phương bé nhất):
+                \[ \hat{y} = -1.4465 + 721.7860 \cdot x \]
                 \item Hệ số xác định $R^2 = 0.8247$: Thời lượng tập giải thích $82.47\%$ biến thiên lượng calo.
-                \item Hệ số góc $\hat{\beta}_1 = 721.79$: Mỗi giờ tập tăng thêm làm tăng trung bình $721.8$ kcal ($P < 10^{-15}$).
+                \item Hệ số góc $\hat{\beta}_1 = 721.79$ ($P\text{-giá trị} < 10^{-15}$): Mỗi giờ tập tăng đốt thêm 721.8 kcal.
             \end{itemize}
-            \vspace{2pt}
-            \begin{block}{Kiểm định hệ số góc và tương đương $t_0^2 = f_0$}
+            \begin{block}{Mối liên hệ giữa kiểm định $T_0$ và $F_0$}
                 \scriptsize
-                Kiểm định $H_0: \beta_1 = 0$ đối với $H_1: \beta_1 \neq 0$:
-                \[ t_0^2 = \left(\frac{\hat{\beta}_1}{s / \sqrt{S_{xx}}}\right)^2 = \frac{\hat{\beta}_1^2 S_{xx}}{s^2} = \frac{SSR / 1}{SSE / (n-2)} = \frac{MSR}{MSE} = f_0 \]
-                Thực nghiệm: $t_0^2 = 67.5920^2 = 4568.6744 = f_0 \in W_{0.05} \rightarrow$ Bác bỏ $H_0$.
+                \[ T_0^2 = \left(\frac{\hat{\beta}_1}{s / \sqrt{S_{xx}}}\right)^2 = \frac{\hat{\beta}_1^2 S_{xx}}{s^2} = \frac{MSR}{MSE} = F_0 \]
+                Thực nghiệm: $T_0^2 = 67.5920^2 = 4568.6744 = F_0$.
             \end{block}
         \end{column}
-        \begin{column}{0.52\textwidth}
+        \begin{column}{0.5\textwidth}
             \includegraphics[width=\textwidth]{../outputs/figures/05_slr_bands.png}
         \end{column}
     \end{columns}
 \end{frame}
 
-% Slide 9: Khoảng tin cậy, khoảng dự đoán và ý nghĩa hệ số chặn (Thảo)
-\begin{frame}{8. Khoảng tin cậy, khoảng dự đoán và ý nghĩa hệ số chặn (Thảo)}
+% Slide 9: 8. Khoảng tin cậy so với khoảng dự đoán và ý nghĩa hệ số chặn
+\begin{frame}{8. Khoảng tin cậy so với khoảng dự đoán và ý nghĩa hệ số chặn}
     \begin{columns}
-        \begin{column}{0.48\textwidth}
-            \textbf{Khoảng tin cậy và khoảng dự đoán}:
-            \footnotesize
-            \begin{itemize}\setlength\itemsep{2pt}
-                \item \textbf{Khoảng tin cậy cho $\mu_{Y|x_0}$}:
-                \[ \hat{y}_0 \pm t_{\alpha/2, n-2} \cdot s \sqrt{\frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}} \]
-                \item \textbf{Khoảng dự đoán cho quan sát mới $y_0$}:
-                \[ \hat{y}_0 \pm t_{\alpha/2, n-2} \cdot s \sqrt{\mathbf{1} + \frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}} \]
-                \item \textit{Giải thích độ rộng}: Phương sai chênh lệch:
-                \[ \sigma^2_{\widehat{Y}_0 - Y_0} = \sigma^2 \left[1 + \frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}\right] \]
-                Khoảng dự đoán rộng hơn do có thêm số hạng 1 ứng với sai số ngẫu nhiên $\sigma^2_{\varepsilon_0} = \sigma^2$ của chính cá thể mới.
+        \begin{column}{0.5\textwidth}
+            \textbf{So sánh dải khoảng tin cậy và dải dự đoán}:
+            \begin{itemize}
+                \item \textbf{Khoảng tin cậy cho $E(Y|x_0)$}: Ước lượng kỳ vọng tổng thể.
+                \[ \hat{y}_0 \pm t_{\alpha/2}(n-2) \cdot s \sqrt{\frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}} \]
+                \item \textbf{Khoảng dự đoán cho cá thể mới $y_0$}:
+                \[ \hat{y}_0 \pm t_{\alpha/2}(n-2) \cdot s \sqrt{\mathbf{1} + \frac{1}{n} + \frac{(x_0 - \bar{x})^2}{S_{xx}}} \]
+                \item \textit{Tại sao luôn rộng hơn?} Vì chứa thêm số hạng ``$+1$'', biểu diễn phương sai sai số tự nhiên của cá thể mới: $V(y_0 - \hat{y}_0) = V(\hat{y}_0) + \sigma^2$.
             \end{itemize}
         \end{column}
-        \begin{column}{0.52\textwidth}
-            \begin{block}{Ý nghĩa của hệ số chặn $\hat{\beta}_0 = -1.45$}
-                \footnotesize
-                \begin{itemize}\setlength\itemsep{2pt}
-                    \item \textbf{Về thực tế}: Hệ số chặn chỉ có ý nghĩa khi $x=0$. Trong dữ liệu $x \in [0.5, 2.0]$ giờ (không ai tập 0 giờ), việc ngoại suy tại $x=0$ không mang ý nghĩa thực tế.
-                    \item \textbf{Về vai trò kỹ thuật trong mô hình}:
-                    \begin{enumerate}\setlength\itemsep{1pt}
-                        \item Giúp xác định đúng bản chất mối quan hệ (tránh áp đặt đi qua gốc tọa độ).
-                        \item Đảm bảo tổng phần dư $\sum e_i = 0$ và đường hồi quy đi qua trọng tâm $(\bar{x}, \bar{y})$.
-                        \item Đảm bảo ý nghĩa của hệ số xác định $R^2$ và phân rã $SST = SSR + SSE$.
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Ý nghĩa thực tế và toán học của hệ số chặn $\hat{\beta}_0 = -1.45$}
+                \begin{itemize}
+                    \item \textbf{Về thực tế}: Dữ liệu không có buổi tập nào $0$ giờ ($x \in [0.5, 2.0]$). Ngoại suy tại $x=0$ không mang ý nghĩa thực tiễn.
+                    \item \textbf{Về toán học}: $\hat{\beta}_0$ là mỏ neo toán học bắt buộc để:
+                    \begin{enumerate}
+                        \item Đảm bảo tổng phần dư $\sum e_i = 0$.
+                        \item Buộc đường hồi quy đi qua trọng tâm $(\bar{x}, \bar{y})$.
+                        \item Giữ phân rã tổng bình phương $SST = SSR + SSE$.
                     \end{enumerate}
                 \end{itemize}
             \end{block}
@@ -294,23 +275,23 @@
     \end{columns}
 \end{frame}
 
-% Slide 10: Chương 4.2 - Phần dư & Tương quan tuyến tính (Khánh)
-\begin{frame}{9. Chương 4.2: Phân tích Phần dư \& Biến đổi Fisher Z (Khánh)}
+% Slide 10: 9. Chương 4.2: phân tích phần dư và hệ số tương quan
+\begin{frame}{9. Chương 4.2: phân tích phần dư và hệ số tương quan}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            \textbf{Chẩn đoán phần dư}:
+            \textbf{Chẩn đoán phần dư ($e_i = y_i - \hat{y}_i$)}:
             \begin{itemize}
-                \item $E(e_i) \approx 0$, Skewness = $-0.02$, Kurtosis = $0.05$.
-                \item Phân tán thuần nhất (Homoscedasticity).
-                \item Q-Q plot bám sát đường 45° chuẩn.
+                \item Kỳ vọng sai số $E(e_i) \approx 0$, hệ số bất đối xứng $-0.02$, hệ số nhọn $0.05$.
+                \item Phương sai sai số đồng nhất (thuần nhất).
+                \item Đồ thị xác suất bám sát đường phân phối chuẩn.
             \end{itemize}
             \vspace{5pt}
-            \textbf{Hệ số tương quan Pearson $r = 0.9081$}:
+            \textbf{Hệ số tương quan mẫu $r = 0.9081$}:
             \begin{itemize}
-                \item Kiểm định $H_0: \rho = 0$: $t_0 = 67.592$ ($P < 10^{-15}$).
-                \item Biến đổi Fisher: $Z = \text{arctanh}(r) = 1.5167$.
-                \item Kiểm định $H_0: \rho = 0.85$: $Z_0 = 8.1633$ $\rightarrow$ Bác bỏ.
-                \item KTC 95\% cho $\rho$: $[0.8965, 0.9185]$.
+                \item Kiểm định $H_0: \rho = 0$: $t_0 = 67.592$ ($P\text{-giá trị} < 10^{-15}$).
+                \item Biến đổi Fisher: $U = \frac{1}{2}\ln \frac{1+r}{1-r} = \text{arctanh}(r) = 1.5167$.
+                \item Kiểm định $H_0: \rho = 0.85$: $Z_0 = \frac{U - U_0}{\sqrt{1/(n-3)}} = 8.1633 \rightarrow$ Bác bỏ.
+                \item Khoảng tin cậy 95\% cho hệ số tương quan $\rho$: $[0.8965, 0.9185]$.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
@@ -319,44 +300,54 @@
     \end{columns}
 \end{frame}
 
-% Slide 11: Vấn đáp trọng tâm & Tương quan vs Nhân quả (Cả hai)
-\begin{frame}{10. Trả lời Câu hỏi Trọng tâm: Tương quan vs Nhân quả (Cả hai)}
-    \begin{block}{Nguyên lý cốt lõi: ``Tương quan không đồng nghĩa với Nhân quả''}
-        Mặc dù hệ số $r = 0.9081$ rất cao, \textbf{thời lượng tập KHÔNG PHẢI nguyên nhân duy nhất} quyết định lượng calo đốt cháy!
+% Slide 11: 10. Trả lời câu hỏi trọng tâm: tương quan và nhân quả
+\begin{frame}{10. Trả lời câu hỏi trọng tâm: tương quan và nhân quả}
+    \begin{block}{Nguyên lý cốt lõi: ``Tương quan không đồng nghĩa với nhân quả''}
+        Mặc dù hệ số $r = 0.9081$ rất cao, \textbf{thời lượng tập không phải nguyên nhân duy nhất} quyết định lượng calo tiêu thụ!
     \end{block}
     \vspace{5pt}
-    \textbf{Các biến giấu mặt (Confounding / Lurking Variables) cùng chi phối}:
+    \textbf{Các yếu tố cùng chi phối}:
     \begin{enumerate}
-        \item \textbf{Cường độ gắng sức tim mạch (\texttt{Avg\_BPM}, \texttt{Max\_BPM})}: Người tập ở nhịp tim $160$ BPM đốt calo gấp rưỡi so với người tập ở nhịp tim $110$ BPM trong cùng $1$ giờ.
-        \item \textbf{Khối lượng cơ thể (\texttt{Weight})}: Người nặng cân hơn đòi hỏi tiêu hao công năng cơ học lớn hơn.
-        \item \textbf{Loại bài tập (\texttt{Workout\_Type})}: HIIT và Cardio đốt calo theo phút vượt trội so với Yoga.
+        \item \textbf{Cường độ gắng sức tim mạch (\texttt{Avg\_BPM}, \texttt{Max\_BPM})}: Người tập ở nhịp tim $160$ BPM tiêu thụ calo vượt trội so với nhịp tim $110$ BPM trong cùng thời gian tập.
+        \item \textbf{Khối lượng cơ thể (\texttt{Weight})}: Thể trọng lớn đòi hỏi tiêu hao công năng cơ học lớn hơn.
+        \item \textbf{Loại bài tập (\texttt{Workout\_Type})}: HIIT và Cardio đốt cháy calo trên mỗi phút tập cao hơn nhiều so với Yoga.
     \end{enumerate}
     \vspace{3pt}
-    $\longrightarrow$ \textbf{Định hướng phát triển bắt buộc}: Mở rộng sang \textbf{Hồi quy tuyến tính bội} (\texttt{Multiple Regression}) để kiểm soát đồng thời các biến can thiệp.
+    $\longrightarrow$ \textbf{Định hướng phát triển}: Mở rộng sang mô hình \textbf{Hồi quy tuyến tính bội} để kiểm soát đồng thời tác động của nhiều biến giải thích.
 \end{frame}
 
-% Slide 12: Tổng kết & Kết luận
-\begin{frame}{11. Tổng kết và Nghiệm thu Dự án}
+% Slide 12: 11. Tổng kết
+\begin{frame}{11. Tổng kết}
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \textbf{Sản phẩm hoàn thành}:
             \begin{itemize}
                 \item \texttt{main.py}: Chạy tuần tự 6 mô-đun và kiểm tra chéo tự động trong $25$ giây.
-                \item Toàn văn báo cáo khoa học PDF: \texttt{BaoCao\_SLTK\_Nhom18.pdf}.
-                \item Slide thuyết trình Beamer PDF: \texttt{Slide\_ThuyetTrinh\_Nhom18.pdf}.
-                \item Repository GitHub đầy đủ mã nguồn và dữ liệu.
+                \item Báo cáo toàn văn: \texttt{BaoCao\_SLTK\_Nhom18.pdf}.
+                \item Slide thuyết trình Beamer: \texttt{Slide\_ThuyetTrinh\_Nhom18.pdf}.
+                \item Mã nguồn và tài liệu lưu trữ đầy đủ trong thư mục dự án.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
-            \begin{block}{Thông điệp kết luận}
-                Phương pháp suy luận thống kê cung cấp bộ công cụ định lượng khoa học và khách quan, biến dữ liệu thô thành tri thức thực tiễn có độ tin cậy cao!
-            \end{block}
-            \vspace{15pt}
-            \centering
-            {\Large\bfseries CẢM ƠN THẦY VÀ CÁC BẠN\\ĐÃ LẮNG NGHE!}\\[10pt]
-            \textit{Hỏi đáp và Thảo luận nội bộ}
+            \textbf{Kết quả thực nghiệm chính}:
+            \begin{itemize}
+                \item \textbf{Mẫu và ước lượng}: Kích thước $n=973$; ước lượng điểm và khoảng tin cậy 95\% vững chắc cho kỳ vọng, phương sai, tỷ lệ.
+                \item \textbf{Kiểm định và phân tích phương sai}: Bác bỏ tính đồng nhất calo theo loại bài tập ($F_0 = 6.7644$, $P < 0.001$).
+                \item \textbf{Hồi quy và tương quan}: $R^2 = 82.47\%$, hệ số tương quan mẫu $r = 0.9081$, mở rộng sang hồi quy tuyến tính bội.
+            \end{itemize}
         \end{column}
     \end{columns}
+\end{frame}
+
+% Slide 13: 12. Thank you
+\begin{frame}[c]{12. Thank you}
+    \begin{center}
+        \vspace{1.5cm}
+        {\Huge\bfseries\color{NavyBlue} THANK YOU!}
+        
+        \vspace{1cm}
+        {\large Cảm ơn thầy cô và các bạn đã chú ý lắng nghe!}
+    \end{center}
 \end{frame}
 
 \end{document}

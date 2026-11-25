@@ -345,7 +345,7 @@ print(f"   ✅ {out_csv}")
 
 # Markdown report
 md = []
-md.append("# Chương 3 (Phần 2) — ANOVA 1 nhân tố & Kiểm định phi tham số\n")
+md.append("# Chương 3 (phần 2) — ANOVA một nhân tố và kiểm định phi tham số\n")
 
 md.append("## A. ANOVA 1 nhân tố: Calories_Burned ~ Workout_Type\n")
 md.append("### Giả thiết\n")

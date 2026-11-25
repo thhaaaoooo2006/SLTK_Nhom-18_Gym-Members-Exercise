@@ -1,4 +1,4 @@
-# Chương 3 (Phần 2) — ANOVA 1 nhân tố & Kiểm định phi tham số
+# Chương 3 (phần 2) — ANOVA một nhân tố và kiểm định phi tham số
 
 ## A. ANOVA 1 nhân tố: Calories_Burned ~ Workout_Type
 

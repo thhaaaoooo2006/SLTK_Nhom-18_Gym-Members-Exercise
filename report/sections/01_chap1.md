@@ -1,27 +1,25 @@
-# CHƯƠNG 1: MẪU NGẪU NHIÊN VÀ THỐNG KÊ MÔ TẢ
-
-**Người thực hiện**: Nguyễn Thị Thảo | **Reviewer**: Nguyễn Văn Nam Khánh
+# Chương 1: Mẫu ngẫu nhiên và thống kê mô tả
 
 ## 1. Cơ sở lý thuyết mẫu ngẫu nhiên
 
-### 1.1. Định nghĩa Mẫu ngẫu nhiên & Hàm thống kê
-- **Mẫu ngẫu nhiên (Random Sample)**: Cho $X$ là biến ngẫu nhiên có hàm phân phối tích lũy $F(x)$ đặc trưng cho tổng thể nghiên cứu. Bộ $n$ đại lượng ngẫu nhiên $(X_1, X_2, \dots, X_n)$ được gọi là một mẫu ngẫu nhiên kích thước $n$ nếu chúng độc lập với nhau và có cùng phân phối xác suất với $X$ ($iid$ - independent and identically distributed):
+### 1.1. Định nghĩa mẫu ngẫu nhiên và hàm thống kê
+- **Mẫu ngẫu nhiên**: Cho $X$ là biến ngẫu nhiên có hàm phân phối tích lũy $F(x)$ đặc trưng cho tổng thể nghiên cứu. Bộ $n$ đại lượng ngẫu nhiên $(X_1, X_2, \dots, X_n)$ được gọi là một mẫu ngẫu nhiên kích thước $n$ nếu chúng độc lập với nhau và có cùng phân phối xác suất với $X$ ($iid$ - independent and identically distributed):
   $$P(X_1 \le x_1, X_2 \le x_2, \dots, X_n \le x_n) = \prod_{i=1}^n F(x_i)$$
-- **Hàm thống kê (Statistic)**: Mọi hàm thực $T = g(X_1, X_2, \dots, X_n)$ hoàn toàn xác định từ các biến ngẫu nhiên của mẫu và không chứa bất kỳ tham số tổng thể chưa biết nào đều được gọi là một hàm thống kê.
+- **Hàm thống kê**: Mọi hàm thực $T = g(X_1, X_2, \dots, X_n)$ hoàn toàn xác định từ các biến ngẫu nhiên của mẫu và không chứa bất kỳ tham số tổng thể chưa biết nào đều được gọi là một hàm thống kê.
 
 ### 1.2. Các đặc trưng mẫu cơ bản
-1. **Trung bình mẫu (Sample Mean)**:
+1. **Trung bình mẫu**:
    $$\bar{X} = \frac{1}{n} \sum_{i=1}^n X_i$$
    Đặc tính: $E(\bar{X}) = \mu$, $Var(\bar{X}) = \frac{\sigma^2}{n}$. $\bar{X}$ là ước lượng không chệch, vững và tiệm cận chuẩn theo Định lý Giới hạn Trung tâm (CLT).
-2. **Phương sai mẫu hiệu chỉnh (Sample Variance)**:
+2. **Phương sai mẫu hiệu chỉnh**:
    $$S^2 = \frac{1}{n - 1} \sum_{i=1}^n (X_i - \bar{X})^2$$
    Việc chia cho bậc tự do $n - 1$ thay vì $n$ là điều kiện toán học bắt buộc để loại bỏ độ chệch: $E(S^2) = \sigma^2$. Nếu chia cho $n$, ước lượng sẽ bị chệch dưới với $E(S_n^2) = \frac{n-1}{n}\sigma^2$.
 3. **Độ lệch chuẩn mẫu hiệu chỉnh**: $S = \sqrt{S^2}$.
-4. **Tần suất mẫu (Sample Proportion)**:
+4. **Tần suất mẫu**:
    $$\hat{p} = \frac{k}{n} = \frac{1}{n} \sum_{i=1}^n I_A(X_i)$$
    với $I_A$ là biến chỉ thị cá thể thuộc nhóm biến cố quan tâm. $\hat{p}$ là ước lượng không chệch cho xác suất $p$ của tổng thể.
 
-## 2. Bối cảnh nghiên cứu và Phân loại biến
+## 2. Bối cảnh nghiên cứu và phân loại biến
 
 Bộ dữ liệu **Gym Members Exercise Tracking** gồm $n = 973$ quan sát cá thể thành viên phòng gym, theo dõi các chỉ số sinh trắc học, thói quen tập luyện và hiệu suất tiêu thụ năng lượng:
 - **Biến định lượng liên tục**: `Weight (kg)`, `Height (m)`, `Session_Duration` (giờ), `Calories_Burned` (kcal), `Fat_Percentage` (%), `Water_Intake (liters)`, `BMI`.
