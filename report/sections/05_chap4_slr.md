@@ -1,6 +1,4 @@
-# CHƯƠNG 4.1: HỒI QUY TUYẾN TÍNH ĐƠN (MÔ HÌNH & SUY LUẬN)
-**Người thực hiện**: Nguyễn Thị Thảo | **Reviewer**: Khánh
-
+# Chương 4.1: Hồi quy tuyến tính đơn (mô hình và suy luận)
 ## 1. Cơ sở lý thuyết toán học (Định lý 1, 3, 4, 5, 6, 7, 8)
 
 ### 1.1. Mô hình và Các giả thiết cổ điển Gauss-Markov
@@ -30,7 +28,7 @@ với các tổng bình phương độ lệch mẫu:
 - $S_{yy} = \sum_{i=1}^n (y_i - \bar{y})^2 = \sum y_i^2 - n \bar{y}^2$
 - $S_{xy} = \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) = \sum x_i y_i - n \bar{x}\bar{y}$
 
-### 1.3. Phân phối của các ước lượng và Ước lượng phương sai sai số (Định lý 3 & 4)
+### 1.3. Phân phối của các ước lượng và ước lượng phương sai sai số (Định lý 3 và 4)
 Dưới giả thiết phân phối chuẩn của sai số:
 $$\hat{\beta}_1 \sim \mathcal{N}\left(\beta_1, \frac{\sigma^2}{S_{xx}}\right), \qquad \hat{\beta}_0 \sim \mathcal{N}\left(\beta_0, \sigma^2 \left[\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}}\right]\right)$$
 $$Cov(\hat{\beta}_0, \hat{\beta}_1) = -\frac{\bar{x}\sigma^2}{S_{xx}}$$
@@ -206,7 +204,7 @@ và thống kê $\frac{(n-2)s^2}{\sigma^2} \sim \chi^2(n-2)$, độc lập thố
 - **Hệ số tương quan**: $r = 0.9081$.
 - **Độ lệch chuẩn phần dư**: $s = \sqrt{MSE} = 114.2044$ kcal.
 
-## 3. Phân tích phương sai hồi quy (ANOVA) & Kiểm định giả thuyết
+## 3. Phân tích phương sai hồi quy (ANOVA) và kiểm định giả thuyết
 
 ### 3.1. Bảng ANOVA hồi quy (Định lý 6)
 
@@ -234,7 +232,7 @@ $$t_0^2 = \left(\frac{\hat{\beta}_1}{s / \sqrt{S_{xx}}}\right)^2 = \frac{\hat{\b
 $$t_0^2 = 67.5919^2 = 4568.6744 = f_0$$
 Theo lý thuyết xác suất, nếu $T \sim t(\nu)$ thì $T^2 \sim F(1, \nu)$. Do đó, trong hồi quy tuyến tính đơn (1 biến độc lập), kiểm định $t$ và kiểm định $F$ là **hoàn toàn tương đương** về miền bác bỏ và $P$-giá trị.
 
-## 4. Khoảng tin cậy & Khoảng dự đoán (Định lý 7 & 8)
+## 4. Khoảng tin cậy và khoảng dự đoán (Định lý 7 và 8)
 
 ### 4.1. Khoảng tin cậy 95% cho các tham số
 

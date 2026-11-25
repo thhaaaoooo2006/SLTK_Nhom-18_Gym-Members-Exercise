@@ -384,8 +384,7 @@ khoảng dự đoán cho một quan sát mới $Y_0$: $\\hat y_0\\pm t\\,s\\sqrt
 
     # 11. Ghi báo cáo chuyên sâu 05_chap4_slr.md (Yêu cầu đề tài phân công)
     md_slr = []
-    md_slr.append("# CHƯƠNG 4.1: HỒI QUY TUYẾN TÍNH ĐƠN (MÔ HÌNH & SUY LUẬN)")
-    md_slr.append(f"**Người thực hiện**: Nguyễn Thị Thảo | **Reviewer**: Khánh\n")
+    md_slr.append("# Chương 4.1: Hồi quy tuyến tính đơn (mô hình và suy luận)")
     md_slr.append("## 1. Cơ sở lý thuyết toán học (Định lý 1, 3, 4, 5, 6, 7, 8)\n")
     md_slr.append("### 1.1. Mô hình và Các giả thiết cổ điển Gauss-Markov")
     md_slr.append(r"""Mô hình hồi quy tuyến tính đơn có dạng:
@@ -416,7 +415,7 @@ với các tổng bình phương độ lệch mẫu:
 - $S_{xy} = \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) = \sum x_i y_i - n \bar{x}\bar{y}$
 """)
 
-    md_slr.append("### 1.3. Phân phối của các ước lượng và Ước lượng phương sai sai số (Định lý 3 & 4)")
+    md_slr.append("### 1.3. Phân phối của các ước lượng và ước lượng phương sai sai số (Định lý 3 và 4)")
     md_slr.append(r"""Dưới giả thiết phân phối chuẩn của sai số:
 $$\hat{\beta}_1 \sim \mathcal{N}\left(\beta_1, \frac{\sigma^2}{S_{xx}}\right), \qquad \hat{\beta}_0 \sim \mathcal{N}\left(\beta_0, \sigma^2 \left[\frac{1}{n} + \frac{\bar{x}^2}{S_{xx}}\right]\right)$$
 $$Cov(\hat{\beta}_0, \hat{\beta}_1) = -\frac{\bar{x}\sigma^2}{S_{xx}}$$
@@ -437,7 +436,7 @@ và thống kê $\frac{(n-2)s^2}{\sigma^2} \sim \chi^2(n-2)$, độc lập thố
     md_slr.append(f"- **Hệ số tương quan**: $r = {r:.4f}$.")
     md_slr.append(f"- **Độ lệch chuẩn phần dư**: $s = \\sqrt{{MSE}} = {s:.4f}$ kcal.\n")
 
-    md_slr.append("## 3. Phân tích phương sai hồi quy (ANOVA) & Kiểm định giả thuyết\n")
+    md_slr.append("## 3. Phân tích phương sai hồi quy (ANOVA) và kiểm định giả thuyết\n")
     md_slr.append("### 3.1. Bảng ANOVA hồi quy (Định lý 6)\n")
     anova_clean = pd.DataFrame([
         {"Nguồn biến thiên": "Hồi quy (SSR)", "SS": ssr, "df": df_reg, "MS": msr, "F₀": F, "P-value": p_F},
@@ -464,7 +463,7 @@ $$t_0^2 = 67.5919^2 = 4568.6744 = f_0$$
 Theo lý thuyết xác suất, nếu $T \sim t(\nu)$ thì $T^2 \sim F(1, \nu)$. Do đó, trong hồi quy tuyến tính đơn (1 biến độc lập), kiểm định $t$ và kiểm định $F$ là **hoàn toàn tương đương** về miền bác bỏ và $P$-giá trị.
 """)
 
-    md_slr.append("## 4. Khoảng tin cậy & Khoảng dự đoán (Định lý 7 & 8)\n")
+    md_slr.append("## 4. Khoảng tin cậy và khoảng dự đoán (Định lý 7 và 8)\n")
     md_slr.append("### 4.1. Khoảng tin cậy 95% cho các tham số\n")
     md_slr.append(f"- **Hệ số góc $\\beta_1$**: [{ci_b1_lower:.4f}, {ci_b1_upper:.4f}] kcal/giờ.")
     md_slr.append(f"- **Hệ số chặn $\\beta_0$**: [{ci_b0_lower:.4f}, {ci_b0_upper:.4f}] kcal.\n")
