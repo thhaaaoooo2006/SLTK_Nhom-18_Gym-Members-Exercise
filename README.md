@@ -3,8 +3,6 @@
 ## 1. Thông tin thành viên nhóm & Phân công thực hiện
 - **Nguyễn Thị Thảo** — MSSV: `202419101` (Owner: Chương 1, Chương 3 ANOVA & Phi tham số, Chương 4.1 Hồi quy đơn & Biên tập Báo cáo / Slide)
 - **Nguyễn Văn Nam Khánh** — MSSV: `202419069` (Owner: Chương 2 Ước lượng tham số, Chương 3 Kiểm định tham số, Chương 4.2 Phần dư & Tương quan tuyến tính)
-- **Đơn vị đào tạo**: Viện Toán ứng dụng và Tin học (SAMI), Đại học Bách khoa Hà Nội
-- **Học kỳ**: 2026.1
 
 ---
 
