@@ -35,6 +35,7 @@ SRC_SCRIPTS = [
     ("src/04_anova_nonparametric.py", "Chương 3 (Phần 2): ANOVA 1 nhân tố & Kiểm định phi tham số"),
     ("src/05_simple_regression.py", "Chương 4 (Phần 1): Hồi quy tuyến tính đơn & Suy luận"),
     ("src/06_residuals_correlation.py", "Chương 4 (Phần 2): Phân tích phần dư & Tương quan tuyến tính"),
+    ("src/07_multiple_regression_lse.py", "Chương 4 (Phần 3): Hồi quy tuyến tính bội (Mục 4.3.1 & 4.3.2)"),
 ]
 
 
@@ -142,6 +143,8 @@ def cross_check_data() -> bool:
         "05_slr_bands.png",
         "05_regression_fit.png",
         "06_residual_diagnostics.png",
+        "07_mlr_plane_contour.png",
+        "07_mlr_interaction_surface.png",
     ]
     print("4. Kiểm tra sự tồn tại của biểu đồ kết quả:")
     for fig_name in required_figures:
@@ -161,6 +164,7 @@ def cross_check_data() -> bool:
         "04_chap3_part2.md",
         "05_chap4_slr.md",
         "06_chap4_corr.md",
+        "07_chap4_mlr_lse.md",
     ]
     print("5. Kiểm tra các phần báo cáo thành phần (report/sections/):")
     for sec_name in required_sections:
@@ -170,6 +174,22 @@ def cross_check_data() -> bool:
         else:
             print(f"   ❌ Thiếu phần báo cáo: {sec_name}")
             checks_passed = False
+
+    # 6. Kiểm tra điều kiện cực tiểu phương trình chuẩn hồi quy bội (Mục 4.3.2)
+    f_mlr = TABLES_DIR / "07_mlr_comparison_L.csv"
+    if f_mlr.exists():
+        df_mlr = pd.read_csv(f_mlr)
+        max_grad = float(df_mlr["Sai số đạo hàm riêng max |∂L/∂βⱼ|"].max())
+        print(f"6. Kiểm tra điều kiện cực tiểu hệ phương trình chuẩn (Mục 4.3.2):")
+        print(f"   • Sai số đạo hàm riêng lớn nhất max |∂L/∂βⱼ| = {max_grad:.3e}")
+        if max_grad < 1e-5:
+            print("   ✅ Nghiệm hệ phương trình chuẩn thỏa mãn ∂L/∂β₀ = 0 và ∂L/∂βⱼ = 0.")
+        else:
+            print("   ❌ Sai số đạo hàm riêng vượt ngưỡng cho phép.")
+            checks_passed = False
+    else:
+        print(f"   ❌ Thiếu file {f_mlr}")
+        checks_passed = False
 
     if checks_passed:
         print("\n>>> TẤT CẢ DỮ LIỆU ĐÃ VƯỢT QUA KIỂM TRA CHÉO THÀNH CÔNG 100%! <<<")
