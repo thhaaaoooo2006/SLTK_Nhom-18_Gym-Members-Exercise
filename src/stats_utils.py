@@ -266,3 +266,105 @@ def md_table(df: pd.DataFrame, nd: int = 4) -> str:
     for _, r in df.iterrows():
         lines.append("| " + " | ".join(fmt(r[c], nd) for c in cols) + " |")
     return "\n".join(lines)
+
+
+# ----------------------------------------------------------------------------
+# Hồi quy tuyến tính bội – Phương pháp ước lượng bình phương nhỏ nhất (Mục 4.3.2)
+# Thiết lập và giải trực tiếp hệ p = k + 1 phương trình chuẩn (67)
+# ----------------------------------------------------------------------------
+def solve_linear_system_gauss(A, b) -> np.ndarray:
+    """Giải hệ phương trình tuyến tính A·x = b bằng phương pháp khử Gauss có chọn trụ."""
+    M = np.asarray(A, dtype=float).copy()
+    rhs = np.asarray(b, dtype=float).copy()
+    p = rhs.size
+
+    # Khử thuận (Forward elimination với chọn phần tử trụ theo cột)
+    for col in range(p):
+        pivot_row = col + int(np.argmax(np.abs(M[col:, col])))
+        if abs(M[pivot_row, col]) < 1e-15:
+            raise ValueError("Hệ phương trình chuẩn suy biến, không có nghiệm duy nhất.")
+        if pivot_row != col:
+            M[[col, pivot_row]] = M[[pivot_row, col]]
+            rhs[[col, pivot_row]] = rhs[[pivot_row, col]]
+
+        for row in range(col + 1, p):
+            factor = M[row, col] / M[col, col]
+            M[row, col:] -= factor * M[col, col:]
+            rhs[row] -= factor * rhs[col]
+
+    # Thế ngược (Back substitution)
+    sol = np.zeros(p, dtype=float)
+    for row in range(p - 1, -1, -1):
+        sol[row] = (rhs[row] - float(np.dot(M[row, row + 1:], sol[row + 1:]))) / M[row, row]
+    return sol
+
+
+def multiple_lse_normal_equations(X_cols: list, y) -> dict:
+    """Ước lượng bình phương nhỏ nhất cho hồi quy tuyến tính bội qua hệ p = k + 1 phương trình chuẩn.
+
+    Theo Mục 4.3.2 (phương trình (63)–(67) trong bài giảng MI3031 Chương 4):
+        y_i = β_0 + Σ_{j=1}^k β_j x_{ij} + ε_i,   i = 1, ..., n (n > k)
+        L = Σ_{i=1}^n (y_i - β_0 - Σ_{j=1}^k β_j x_{ij})^2
+
+    Thiết lập hệ p = k + 1 phương trình chuẩn bình phương nhỏ nhất từ các tổng:
+        Phương trình 0: n·β̂_0 + Σ_{l=1}^k (Σ x_{il})·β̂_l = Σ y_i
+        Phương trình j: (Σ x_{ij})·β̂_0 + Σ_{l=1}^k (Σ x_{ij} x_{il})·β̂_l = Σ x_{ij} y_i
+    và giải hệ tuyến tính bằng phương pháp khử Gauss.
+    """
+    y_arr = np.asarray(y, dtype=float)
+    cols = [np.asarray(c, dtype=float) for c in X_cols]
+    k = len(cols)
+    n = y_arr.size
+    if n <= k:
+        raise ValueError(f"Cần số quan sát n > k (hiện tại n={n}, k={k}).")
+
+    p = k + 1
+    A = np.zeros((p, p), dtype=float)
+    b = np.zeros(p, dtype=float)
+
+    # Phương trình chuẩn thứ 0 (từ ∂L/∂β_0 = 0)
+    A[0, 0] = float(n)
+    b[0] = float(np.sum(y_arr))
+    for l in range(k):
+        s_xl = float(np.sum(cols[l]))
+        A[0, l + 1] = s_xl
+        A[l + 1, 0] = s_xl
+
+    # Các phương trình chuẩn thứ j = 1, ..., k (từ ∂L/∂β_j = 0)
+    for j in range(k):
+        b[j + 1] = float(np.sum(cols[j] * y_arr))
+        for l in range(j, k):
+            s_xj_xl = float(np.sum(cols[j] * cols[l]))
+            A[j + 1, l + 1] = s_xj_xl
+            A[l + 1, j + 1] = s_xj_xl
+
+    # Giải hệ p = k + 1 phương trình chuẩn
+    beta_hat = solve_linear_system_gauss(A, b)
+
+    # Tính giá trị ước lượng ŷ_i, sai số e_i và giá trị cực tiểu của hàm bình phương nhỏ nhất L
+    y_hat = np.full(n, beta_hat[0], dtype=float)
+    for j in range(k):
+        y_hat = y_hat + beta_hat[j + 1] * cols[j]
+
+    residuals = y_arr - y_hat
+    L_min = float(np.sum(residuals ** 2))
+
+    # Kiểm chứng điều kiện đạo hàm riêng (65) và (66): ∂L/∂β_0 = 0, ∂L/∂β_j = 0
+    grad = np.zeros(p, dtype=float)
+    grad[0] = -2.0 * float(np.sum(residuals))
+    for j in range(k):
+        grad[j + 1] = -2.0 * float(np.sum(residuals * cols[j]))
+
+    return {
+        "n": n,
+        "k": k,
+        "p": p,
+        "normal_A": A,
+        "normal_b": b,
+        "beta_hat": beta_hat,
+        "y_hat": y_hat,
+        "residuals": residuals,
+        "L_min": L_min,
+        "grad_L": grad,
+        "max_abs_grad": float(np.max(np.abs(grad))),
+    }

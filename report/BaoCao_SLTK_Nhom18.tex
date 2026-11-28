@@ -296,6 +296,134 @@ Hệ số tương quan mẫu $r = 0.9081$ (đồng biến rất mạnh).
 
 \textbf{Tương quan không đồng nghĩa với Nhân quả}: Mặc dù $r$ rất cao, thời lượng tập không phải nguyên nhân duy nhất quyết định lượng calo. Các biến can thiệp (Confounding variables) như nhịp tim trung bình (\texttt{Avg\_BPM}), khối lượng cơ thể (\texttt{Weight}) và loại bài tập (\texttt{Workout\_Type}) cùng đóng vai trò chi phối, đòi hỏi cần mở rộng sang mô hình Hồi quy bội.
 
+\section{Hồi quy tuyến tính bội và phương pháp ước lượng bình phương nhỏ nhất}
+\subsection{Giới thiệu về mô hình hồi quy tuyến tính bội (Mục 4.3.1)}
+Mô hình hồi quy tuyến tính đơn chỉ đánh giá tác động của một biến độc lập $x$ lên giá trị trung bình của biến phụ thuộc $Y$, do đó dễ vi phạm Giả thiết 1(2) về sai số ngẫu nhiên khi vẫn còn nhiều yếu tố khác cùng tác động đến $Y$. Điều này dẫn đến sự cần thiết của \textbf{mô hình hồi quy tuyến tính bội} (còn gọi là mô hình hồi quy bội hay hồi quy đa biến).
+
+Trong trường hợp tổng quát với $k$ biến độc lập (biến hồi quy, biến giải thích) $x_1, x_2, \dots, x_k$, mô hình hồi quy tuyến tính bội có dạng:
+\[
+    Y = \beta_0 + \sum_{j=1}^{k} \beta_j x_j + \varepsilon
+\]
+trong đó $\beta_0$ là \textbf{hệ số chặn}, $\beta_1, \dots, \beta_k$ là \textbf{các hệ số góc} chưa biết (còn gọi là \textbf{các hệ số hồi quy riêng} hay \textbf{các hệ số hồi quy lý thuyết}), và $\varepsilon$ là \textbf{sai số ngẫu nhiên} đại diện cho các yếu tố ngoài $x_1, \dots, x_k$ có tác động đến $Y$ nhưng chưa đưa vào mô hình. Với giả thiết $E(\varepsilon) = 0$, \textbf{hàm hồi quy tuyến tính lý thuyết} của $Y$ theo $k$ biến là:
+\[
+    E(Y \mid x_1, \dots, x_k) = \beta_0 + \sum_{j=1}^{k} \beta_j x_j
+\]
+Về mặt hình học, mô hình với $k = 2$ biến hồi quy mô tả một \textbf{mặt phẳng hồi quy} trong không gian ba chiều của $(Y, x_1, x_2)$ với các \textbf{đường đồng mức} (các đường có hằng số $E(Y)$) là các đường thẳng; còn mô hình tổng quát với $k$ biến mô tả một \textbf{siêu phẳng} trong không gian $k$-chiều của $\{x_j\}$. Hệ số hồi quy riêng $\beta_j$ ($j = 1, \dots, k$) biểu thị sự thay đổi dự kiến (kỳ vọng) trong phản hồi $Y$ trên mỗi đơn vị thay đổi trong $x_j$ khi tất cả các biến hồi quy còn lại $x_i$ ($i \ne j$) được giữ không đổi.
+
+Ngoài ra, các mô hình có \textbf{hiệu ứng tương tác} giữa hai biến $x_1$ và $x_2$ được biểu diễn bằng thuật ngữ tích chéo $x_1 x_2$:
+\[
+    Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_{12} x_1 x_2 + \varepsilon
+\]
+vẫn là một mô hình hồi quy tuyến tính bội vì tuyến tính theo các tham số $\beta$ (bằng cách đặt $x_3 = x_1 x_2$ và $\beta_3 = \beta_{12}$). Hiệu ứng tương tác ngụ ý rằng tác động gây ra bởi việc thay đổi $x_1$ phụ thuộc vào mức độ của biến $x_2$, làm cho các đường đồng mức trên mặt phẳng $(x_1, x_2)$ bị uốn cong thay vì là đường thẳng.
+
+\subsection{Phương pháp ước lượng bình phương nhỏ nhất (Mục 4.3.2)}
+Giả sử có $k$ biến hồi quy và $n > k$ quan sát $(x_{i1}, x_{i2}, \dots, x_{ik}; y_i)$, $i = 1, 2, \dots, n$, với $x_{ij}$ biểu thị quan sát thứ $i$ (hoặc mức độ) của biến $x_j$. Mỗi quan sát thỏa mãn:
+\[
+    y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_k x_{ik} + \varepsilon_i = \beta_0 + \sum_{j=1}^{k} \beta_j x_{ij} + \varepsilon_i, \quad i = 1, 2, \dots, n.
+\]
+\textbf{Hàm bình phương nhỏ nhất} được xác định bởi:
+\[
+    L = \sum_{i=1}^{n} \varepsilon_i^2 = \sum_{i=1}^{n} \left( y_i - \beta_0 - \sum_{j=1}^{k} \beta_j x_{ij} \right)^2
+\]
+Để cực tiểu hóa $L$ đối với $\beta_0, \beta_1, \dots, \beta_k$, các ước lượng bình phương nhỏ nhất $\hat{\beta}_0, \hat{\beta}_1, \dots, \hat{\beta}_k$ phải thỏa mãn điều kiện đạo hàm riêng bằng $0$:
+\[
+    \left.\frac{\partial L}{\partial \beta_0}\right|_{\hat{\beta}_0, \dots, \hat{\beta}_k} = -2\sum_{i=1}^{n}\left( y_i - \hat{\beta}_0 - \sum_{j=1}^{k} \hat{\beta}_j x_{ij} \right) = 0
+\]
+\[
+    \left.\frac{\partial L}{\partial \beta_j}\right|_{\hat{\beta}_0, \dots, \hat{\beta}_k} = -2\sum_{i=1}^{n}\left( y_i - \hat{\beta}_0 - \sum_{l=1}^{k} \hat{\beta}_l x_{il} \right) x_{ij} = 0, \quad j = 1, \dots, k.
+\]
+Rút gọn các phương trình trên thu được hệ $p = k + 1$ \textbf{phương trình chuẩn bình phương nhỏ nhất}:
+\[
+\begin{cases}
+    n\hat{\beta}_0 + \hat{\beta}_1 \sum_{i=1}^n x_{i1} + \hat{\beta}_2 \sum_{i=1}^n x_{i2} + \dots + \hat{\beta}_k \sum_{i=1}^n x_{ik} = \sum_{i=1}^n y_i \\
+    \hat{\beta}_0 \sum_{i=1}^n x_{i1} + \hat{\beta}_1 \sum_{i=1}^n x_{i1}^2 + \hat{\beta}_2 \sum_{i=1}^n x_{i1}x_{i2} + \dots + \hat{\beta}_k \sum_{i=1}^n x_{i1}x_{ik} = \sum_{i=1}^n x_{i1}y_i \\
+    \quad \vdots \\
+    \hat{\beta}_0 \sum_{i=1}^n x_{ik} + \hat{\beta}_1 \sum_{i=1}^n x_{ik}x_{i1} + \hat{\beta}_2 \sum_{i=1}^n x_{ik}x_{i2} + \dots + \hat{\beta}_k \sum_{i=1}^n x_{ik}^2 = \sum_{i=1}^n x_{ik}y_i.
+\end{cases}
+\]
+Hệ $p = k + 1$ phương trình tuyến tính này được giải trực tiếp bằng phương pháp khử Gauss (tự cài đặt trong \texttt{src/stats\_utils.py} và \texttt{src/07\_multiple\_regression\_lse.py}) để tìm các \textbf{ước lượng bình phương nhỏ nhất} $(\hat{\beta}_0, \hat{\beta}_1, \dots, \hat{\beta}_k)$.
+
+\subsection{Kết quả ước lượng bình phương nhỏ nhất trên dữ liệu phòng gym}
+Trên bộ dữ liệu $n = 973$ thành viên phòng gym, nhóm xét biến phụ thuộc $Y$: \texttt{Calories\_Burned} (kcal) cùng các biến giải thích $x_1$: \texttt{Session\_Duration} (giờ), $x_2$: \texttt{Avg\_BPM} (nhịp/phút), $x_3$: \texttt{Weight} (kg) và thuật ngữ tích chéo $x_1 x_2$ qua 3 mô hình:
+\begin{itemize}
+    \item \textbf{Mô hình 1} ($k = 2$, $p = 3$): $Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \varepsilon$.
+    \item \textbf{Mô hình 2} ($k = 3$, $p = 4$): $Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon$.
+    \item \textbf{Mô hình 3 -- Tương tác} ($k = 3$, $p = 4$): $Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_{12} x_1 x_2 + \varepsilon$.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Hệ $p = 3$ phương trình chuẩn bình phương nhỏ nhất của Mô hình 1 ($n = 973$)}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Phương trình chuẩn} & \textbf{Hệ số $\hat{\beta}_0$} & \textbf{Hệ số $\hat{\beta}_1$ ($x_1$)} & \textbf{Hệ số $\hat{\beta}_2$ ($x_2$)} & \textbf{Vế phải ($\Sigma$)} \\
+\midrule
+PT 1 ($\partial L / \partial \beta_0 = 0$) & 973.0000 & 1,222.5000 & 139,885.0000 & 880,976.0000 \\
+PT 2 ($\partial L / \partial \beta_1 = 0$) & 1,222.5000 & 1,650.3548 & 175,831.3900 & 1,189,434.7200 \\
+PT 3 ($\partial L / \partial \beta_2 = 0$) & 139,885.0000 & 175,831.3900 & 20,310,825.0000 & 127,946,246.0000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\footnotesize
+\caption{Ước lượng bình phương nhỏ nhất của các hệ số hồi quy bội ($n = 973$)}
+\begin{tabularx}{\textwidth}{ll r X}
+\toprule
+\textbf{Mô hình} & \textbf{Tham số} & \textbf{Ước lượng} & \textbf{Diễn giải hệ số hồi quy riêng} \\
+\midrule
+Mô hình 1 & $\hat{\beta}_0$ (Hệ số chặn) & $-884.8237$ & Hệ số chặn của mặt phẳng hồi quy \\
+($x_1, x_2$) & $\hat{\beta}_1$ (\texttt{Session\_Duration}) & $717.6468$ & Tăng 1 giờ tập làm calo kỳ vọng tăng 717.65 kcal (giữ \texttt{Avg\_BPM} không đổi) \\
+ & $\hat{\beta}_2$ (\texttt{Avg\_BPM}) & $6.1807$ & Tăng 1 nhịp/phút làm calo kỳ vọng tăng 6.18 kcal (giữ \texttt{Session\_Duration} không đổi) \\
+\midrule
+Mô hình 2 & $\hat{\beta}_0$ (Hệ số chặn) & $-982.7905$ & Hệ số chặn của siêu phẳng hồi quy \\
+($x_1, x_2, x_3$) & $\hat{\beta}_1$ (\texttt{Session\_Duration}) & $718.7967$ & Hệ số hồi quy riêng của thời lượng tập (giữ $x_2, x_3$ không đổi) \\
+ & $\hat{\beta}_2$ (\texttt{Avg\_BPM}) & $6.1609$ & Hệ số hồi quy riêng của nhịp tim trung bình (giữ $x_1, x_3$ không đổi) \\
+ & $\hat{\beta}_3$ (\texttt{Weight}) & $1.3454$ & Tăng 1 kg cân nặng làm calo kỳ vọng tăng 1.35 kcal (giữ $x_1, x_2$ không đổi) \\
+\midrule
+Mô hình 3 & $\hat{\beta}_0$ (Hệ số chặn) & $93.6910$ & Hệ số chặn của bề mặt hồi quy có tương tác \\
+(Tương tác) & $\hat{\beta}_1$ (\texttt{Session\_Duration}) & $-62.5958$ & Hệ số bậc nhất của $x_1$ trong mô hình có tương tác \\
+ & $\hat{\beta}_2$ (\texttt{Avg\_BPM}) & $-0.6628$ & Hệ số bậc nhất của $x_2$ trong mô hình có tương tác \\
+ & $\hat{\beta}_{12}$ ($x_1 x_2$) & $5.4544$ & Hệ số thuật ngữ tích chéo (hiệu ứng tương tác giữa $x_1$ và $x_2$) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering\footnotesize
+\caption{So sánh giá trị cực tiểu của hàm bình phương nhỏ nhất $L$ giữa các mô hình}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Mô hình} & \textbf{$k$} & \textbf{$p = k+1$} & \textbf{Hàm $L = \sum (y_i - \hat{y}_i)^2$} & \textbf{Giảm $L$ so với HQ đơn} & \textbf{$\max |\partial L / \partial \beta_j|$} \\
+\midrule
+Hồi quy đơn (Mục 4.1) & 1 & 2 & 12,664,417.79 & -- & -- \\
+Mô hình 1 ($x_1, x_2$) & 2 & 3 & 5,025,418.36 & 60.32\% & $1.088 \times 10^{-8}$ \\
+Mô hình 2 ($x_1, x_2, x_3$) & 3 & 4 & 4,234,331.90 & 66.57\% & $4.156 \times 10^{-8}$ \\
+Mô hình 3 ($x_1, x_2, x_1 x_2$) & 3 & 4 & 4,337,153.87 & 65.75\% & $8.731 \times 10^{-9}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Nhận xét thực nghiệm}:
+\begin{enumerate}
+    \item Khi đưa thêm biến giải thích \texttt{Avg\_BPM} ($x_2$) vào Mô hình 1, giá trị cực tiểu của hàm bình phương nhỏ nhất $L$ giảm mạnh $60.32\%$ (từ $12{,}664{,}417.79$ xuống $5{,}025{,}418.36$). Tiếp tục bổ sung \texttt{Weight} ($x_3$) trong Mô hình 2 giúp $L$ giảm tiếp xuống $4{,}234{,}331.90$ (giảm $66.57\%$ so với hồi quy đơn). Các đạo hàm riêng tại nghiệm đều triệt tiêu về mức sai số máy ($\le 4.16 \times 10^{-8}$), khẳng định nghiệm hệ phương trình chuẩn cực tiểu hóa chính xác hàm $L$.
+    \item \textbf{Diễn giải hiệu ứng tương tác (Mô hình 3)}: Với phương trình ước lượng $\hat{y} = 93.6910 - 62.5958 x_1 - 0.6628 x_2 + 5.4544 x_1 x_2$, việc tăng thời lượng tập $x_1$ từ $0.5$ lên $2.0$ giờ tạo ra mức tăng lượng calo kỳ vọng bằng $+887.90$ kcal (tốc độ $591.93$ kcal/giờ) khi nhịp tim ở mức $x_2 = 120$ nhịp/phút, nhưng tăng tới $+1{,}296.98$ kcal (tốc độ $864.66$ kcal/giờ) khi nhịp tim đạt $x_2 = 170$ nhịp/phút. Điều này chứng tỏ hiệu ứng của thời lượng tập phụ thuộc trực tiếp vào mức độ nhịp tim trung bình, phù hợp với Hình~\ref{fig:mlr_interact} có các đường đồng mức uốn cong.
+\end{enumerate}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{../outputs/figures/07_mlr_plane_contour.png}
+\caption{Mặt phẳng hồi quy 3D và biểu đồ đường đồng mức hai chiều của Mô hình 1 ($Y$ theo $x_1, x_2$)}
+\label{fig:mlr_plane}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{../outputs/figures/07_mlr_interaction_surface.png}
+\caption{Bề mặt hồi quy 3D và biểu đồ đường đồng mức của Mô hình 3 có hiệu ứng tương tác $x_1 x_2$}
+\label{fig:mlr_interact}
+\end{figure}
+
 % ==================== CHƯƠNG 5 ====================
 \chapter{Kết luận và hướng phát triển}
 \section{Kết luận}
@@ -305,6 +433,7 @@ Báo cáo đã hoàn thành toàn diện các mục tiêu nghiên cứu của h�
     \item Ước lượng điểm và xây dựng khoảng tin cậy 95\% (1 phía, 2 phía) cho kỳ vọng, phương sai, tỷ lệ và so sánh 2 tổng thể.
     \item Thực hiện quy trình kiểm định tham số và phi tham số bằng 3 cách tiếp cận nhất quán; chứng minh tác động của loại hình bài tập qua ANOVA ($P = 0.00016$).
     \item Xây dựng mô hình hồi quy tuyến tính đơn giải thích $82.47\%$ biến thiên lượng calo; chứng minh chặt chẽ $t_0^2 = f_0$, phân tích phần dư chuẩn hóa và biến đổi Fisher $Z$.
+    \item Bổ sung mô hình hồi quy tuyến tính bội (Mục 4.3.1) và ước lượng các hệ số hồi quy riêng bằng phương pháp ước lượng bình phương nhỏ nhất thông qua hệ $p = k + 1$ phương trình chuẩn (Mục 4.3.2), minh họa trực quan mặt phẳng hồi quy, bề mặt tương tác và biểu đồ đường đồng mức.
 \end{enumerate}
 
 \section{Hướng phát triển: hồi quy tuyến tính bội}

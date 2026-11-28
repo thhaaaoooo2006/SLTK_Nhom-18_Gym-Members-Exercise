@@ -1,0 +1,12 @@
+﻿Mô hình,Tham số,Ước lượng bình phương nhỏ nhất,Ý nghĩa
+Mô hình 1 (2 biến),β̂₀ (Hệ số chặn),-884.8237332311976,Hệ số chặn mặt phẳng hồi quy
+Mô hình 1 (2 biến),β̂₁ (Session_Duration),717.6468198163006,Thay đổi kỳ vọng calo khi tăng 1 giờ tập (giữ Avg_BPM không đổi)
+Mô hình 1 (2 biến),β̂₂ (Avg_BPM),6.180693106541285,Thay đổi kỳ vọng calo khi tăng 1 nhịp/phút (giữ Session_Duration không đổi)
+Mô hình 2 (3 biến),β̂₀ (Hệ số chặn),-982.7905085023274,Hệ số chặn siêu phẳng hồi quy
+Mô hình 2 (3 biến),β̂₁ (Session_Duration),718.7967220037766,"Hệ số hồi quy riêng của Session_Duration (giữ Avg_BPM, Weight không đổi)"
+Mô hình 2 (3 biến),β̂₂ (Avg_BPM),6.160924576499644,"Hệ số hồi quy riêng của Avg_BPM (giữ Session_Duration, Weight không đổi)"
+Mô hình 2 (3 biến),β̂₃ (Weight (kg)),1.3453998121292465,"Hệ số hồi quy riêng của Weight (giữ Session_Duration, Avg_BPM không đổi)"
+Mô hình 3 (Tương tác),β̂₀ (Hệ số chặn),93.69101945531092,Hệ số chặn bề mặt hồi quy có tương tác
+Mô hình 3 (Tương tác),β̂₁ (Session_Duration),-62.595815725865705,Hệ số góc bậc nhất của Session_Duration
+Mô hình 3 (Tương tác),β̂₂ (Avg_BPM),-0.662833894061306,Hệ số góc bậc nhất của Avg_BPM
+Mô hình 3 (Tương tác),β̂₁₂ (x₁·x₂),5.454421659668499,Hệ số thuật ngữ tích chéo (hiệu ứng tương tác giữa x₁ và x₂)
